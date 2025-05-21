@@ -68,6 +68,7 @@ namespace PolMedUMG.ViewModel
                         query2.Parameters.AddWithValue("@uid", _username);
                         query2.Parameters.AddWithValue("@pwd", _password);
                         String acctype = query2.ExecuteScalar().ToString();
+                        Properties.Settings.Default.User = _username;
                         conn.Close();
 
                         // W zale�no�ci od typu u�ytkownika otwieramy odpowiednie okno

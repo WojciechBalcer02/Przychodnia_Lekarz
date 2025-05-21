@@ -33,6 +33,6 @@ namespace PolMedUMG.View
         {
             if (dtxtDoctorSearch.Text != "") { dLblIdPlaceholder.Visibility = Visibility.Hidden; }
             else { dLblIdPlaceholder.Visibility = Visibility.Visible; }
-        }
+        }        
     }
 }

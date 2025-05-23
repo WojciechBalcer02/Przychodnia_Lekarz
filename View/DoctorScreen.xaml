@@ -76,7 +76,7 @@
                 <ListBoxItem Content="Strona główna"/>
                 <ListBoxItem Content="Umów wizytę"/>
                 <ListBoxItem Content="Kalendarz"/>
-                <ListBoxItem Content="Cennik"/>
+                <ListBoxItem Content="Cennik usług"/>
                 <ListBoxItem Content="Wiadomości"/>
                 <ListBoxItem Content="Ustawienia konta"/>
             </ListBox>
@@ -101,7 +101,7 @@
                 x:Name="dUser"
                 FontSize="14"
                 FontWeight="Bold"
-                Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center">
+                Foreground="White" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Center">
                 <TextBlock.DataContext>
                     <ViewModel:DoctorScreenView/>
                 </TextBlock.DataContext>

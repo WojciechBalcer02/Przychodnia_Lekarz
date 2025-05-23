@@ -11,6 +11,7 @@ namespace PolMedUMG.View
         public DoctorScreen( )
         {
             InitializeComponent();
+            //Wyświetla nazwę użytkownika na dolnym pasku ekranu
             dUser.Text = Properties.Settings.Default.User;
 
 
@@ -36,20 +37,19 @@ namespace PolMedUMG.View
                         dLoadContent(new dMainView());
                         break;
                     case "Umów wizytę":
-                        dLoadContent(new MakeAppointment());
+                        dLoadContent(new dMakeAppointment());
                         break;
                     case "Kalendarz":
-                        dLoadContent(new Calendar());
+                        dLoadContent(new dCalendar());
                         break;
-                    case "Cennik":
-                        dLoadContent(new Pricing());
+                    case "Cennik usług":
+                        dLoadContent(new dPricing());
                         break;
-
                     case "Wiadomości":
-                        dLoadContent(new Messages());
+                        dLoadContent(new dMessages());
                         break;
                     case "Ustawienia konta":
-                        dLoadContent(new Settings());
+                        dLoadContent(new dSettings());
                         break;
                     default:
                         break;

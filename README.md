@@ -1,1 +1,1 @@
-Planowa: Zajebaine main screena od drugiej grupy i dodanie funkcjonalności main pageowi
+Repozytorium do główenego ekranu i.e sprawdzanie profili lekarza i pacjenta

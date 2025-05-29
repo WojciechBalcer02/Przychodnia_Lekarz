@@ -40,11 +40,13 @@ namespace PolMedUMG.ViewModel
         private void Login()
         {
             // Przechowuje informacj� dotycz�ce po��czenia z baz� danych
-            string connStrSQL = "server=bwpd1lnfwwmd8zooiosa-mysql.services.clever-cloud.com;uid=uf9nqf7gizjdvxmm;pwd=mV5lVFodqkbncFJJnxqQ;database=bwpd1lnfwwmd8zooiosa";
-
+            SessionManager.connStrSQL = "server=bwpd1lnfwwmd8zooiosa-mysql.services.clever-cloud.com;uid=uf9nqf7gizjdvxmm;pwd=mV5lVFodqkbncFJJnxqQ;database=bwpd1lnfwwmd8zooiosa";
+            //      nowy                "server=bb97fob4mmaybcvttjjk-mysql.services.clever-cloud.com;uid=uirqsom4re7q6gwn;pwd=ODh2O0u6eNj3uUkXsLYO;database=bb97fob4mmaybcvttjjk"
+            //      stary               "server=bwpd1lnfwwmd8zooiosa-mysql.services.clever-cloud.com;uid=uf9nqf7gizjdvxmm;pwd=mV5lVFodqkbncFJJnxqQ;database=bwpd1lnfwwmd8zooiosa"
+            SessionManager.CurrentUsername = _username;
             try
             {
-                MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(connStrSQL);
+                MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(SessionManager.connStrSQL);
                 conn.Open();
 
                 // Zapytanie do bazy o wybranego u�ytkownika
@@ -68,9 +70,17 @@ namespace PolMedUMG.ViewModel
                         query2.Parameters.AddWithValue("@uid", _username);
                         query2.Parameters.AddWithValue("@pwd", _password);
                         String acctype = query2.ExecuteScalar().ToString();
-                        Properties.Settings.Default.User = _username;
-                        conn.Close();
 
+                        SessionManager.accType = acctype;
+                        // wyslanie do bazy daty logowania
+                        MySqlCommand updateLoginTime = new MySqlCommand();
+                        updateLoginTime.Connection = conn;
+                        updateLoginTime.CommandText = @"UPDATE users SET last_login = @loginTime WHERE uid = @uid;";
+                        updateLoginTime.Parameters.AddWithValue("@loginTime", DateTime.Now);
+                        updateLoginTime.Parameters.AddWithValue("@uid", _username);
+                        updateLoginTime.ExecuteNonQuery();
+
+                        conn.Close();
                         // W zale�no�ci od typu u�ytkownika otwieramy odpowiednie okno
                         if (acctype.Equals("2"))
                         {

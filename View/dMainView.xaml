@@ -1,7 +1,10 @@
 ﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="PolMedUMG.View.dMainView"
+             xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PolMedUMG.View"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="av" x:Class="PolMedUMG.View.dMainView"
              Height="auto"
              Width="1000">
     <UserControl.Resources>
@@ -81,19 +84,19 @@
         </Grid.RowDefinitions>
 
         <TextBlock  Height="40" Margin="24,-20,0,0" FontSize="26" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Width="192" RenderTransformOrigin="0.621,0.535" Grid.Column="1"><Run Language="en-150" Text="Strona główna"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" FontSize="20" Height="28" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="60,50,0,0"><Run Language="en-150" Text="Wyszukaj pacjenta"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" FontSize="20" Height="27" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="60,27,0,0"><Run Text="Wyszukaj "/><Run Language="en-150" Text="lekarza"/></TextBlock>
-        <TextBox  x:Name="dtxtPatientSearch" TextChanged="dtxtPatientSearch_TextChanged" HorizontalAlignment="Left" Height="21" Margin="60,97,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" />
-        <TextBox  x:Name="dtxtDoctorSearch" TextChanged="dtxtDoctorSearch_TextChanged" HorizontalAlignment="Left" Height="20" Margin="60,74,0,30" Grid.Row="2" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180" />
+        <TextBlock HorizontalAlignment="Left" FontSize="20" Height="28" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="10,50,0,0"><Run Language="en-150" Text="Wyszukaj pacjenta"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" FontSize="20" Height="27" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="10,27,0,0"><Run Text="Wyszukaj "/><Run Language="en-150" Text="lekarza"/></TextBlock>
+        <TextBox  x:Name="txtPatientSearch" TextChanged="txtPatientSearch_TextChanged" HorizontalAlignment="Left" Height="21" Margin="10,97,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding PatientUsername, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="180" />
+        <TextBox  x:Name="txtDoctorSearch" Text="{Binding DoctorUsername, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtDoctorSearch_TextChanged" HorizontalAlignment="Left" Height="20" Margin="10,74,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" />
 
 
-        <Button Style="{DynamicResource RoundedButton}"  x:Name="dBtnPatientSearch"   BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="255,97,0,0" Grid.Row="1" VerticalAlignment="Top" Width="70" />
+        <Button Style="{DynamicResource RoundedButton}" Command="{Binding PatientLookup}"  x:Name="BtnPatientSearch"  BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="205,97,0,0" Grid.Row="1" VerticalAlignment="Top" Width="70" />
 
-        <Button x:Name="dBtnDoctorSearch"   BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="255,74,0,0" Grid.Row="3" VerticalAlignment="Top" Width="70" Style="{DynamicResource RoundedButton}"/>
-        <Label x:Name="dLblPeselPlaceholder" Foreground="LightSlateGray" HorizontalAlignment="Left" Height="26" IsHitTestVisible="False" Margin="60,92,0,0" FontSize="14" Grid.Row="1"  VerticalAlignment="Top" Width="176">
+        <Button x:Name="BtnDoctorSearch"  Command="{Binding DoctorLookup}"  BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="205,74,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" Style="{DynamicResource RoundedButton}"/>
+        <Label x:Name="LblPeselPlaceholder" Foreground="LightSlateGray" HorizontalAlignment="Left" Height="26" IsHitTestVisible="False" Margin="10,92,0,0" FontSize="14" Grid.Row="1"  VerticalAlignment="Top" Width="176">
             <Run Language="en-150" Text="PESEL"/>
         </Label>
-        <Label x:Name="dLblIdPlaceholder"  Foreground="LightSlateGray" HorizontalAlignment="Left" Height="26" IsHitTestVisible="False" Margin="60,68,0,0" FontSize="14" Grid.Row="2"  VerticalAlignment="Top" Width="176">
+        <Label x:Name="LblIdPlaceholder"  Foreground="LightSlateGray" HorizontalAlignment="Left" Height="26" IsHitTestVisible="False" Margin="10,68,0,0" FontSize="14" Grid.Row="2"  VerticalAlignment="Top" Width="176">
             <Run Language="en-150"  Text="ID LEKARZA"/>
         </Label>
 

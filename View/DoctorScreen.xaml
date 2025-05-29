@@ -2,14 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:view="clr-namespace:PolMedUMG.View"
+        xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
         xmlns:ViewModel="clr-namespace:PolMedUMG.ViewModel" x:Class="PolMedUMG.View.DoctorScreen"
-        Title="Panel pacjenta" Height="720" Width="1280"
+        Title="Panel lekarza" Height="720" Width="1280"
         WindowStyle="None"
         ResizeMode="NoResize"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -19,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- LEFT SIDEBAR -->
-        <DockPanel Grid.Row="0" Grid.Column="0" Background="White">
+        <DockPanel Grid.Row="0" Grid.RowSpan="2" Background="White">
 
             <!-- Logo -->
             <Image Source="{StaticResource di_PolMedLOGO}"
@@ -36,7 +39,7 @@
                SelectionMode="Single"
                Margin="0,10,0,0"
                SelectedIndex="0"
-               SelectionChanged="dMyListBox_SelectionChanged">
+               SelectionChanged="MyListBox_SelectionChanged">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -71,7 +74,7 @@
                         </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
-                 
+
                 <!-- Your menu items -->
                 <ListBoxItem Content="Strona główna"/>
                 <ListBoxItem Content="Umów wizytę"/>
@@ -83,30 +86,131 @@
 
         </DockPanel>
 
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Button x:Name="btnMinimize"
+    BorderThickness="7,0,0,0"
+    Foreground="White"
+    FontSize="18"
+    FontFamily="Century Gothic"
+    Cursor="Hand"
+    Grid.Column="1"
+    Click="btnMinimize_Click">
+
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#FFB1B1B1"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFE2E2E2" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="35" Height="20" CornerRadius="3" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+                <fa:ImageAwesome Icon="WindowMinimize" Margin="7"/>
+
+            </Button>
+            <Button x:Name="btnFullScreen"
+BorderThickness="0"
+Foreground="White"
+FontSize="18"
+FontFamily="Century Gothic"
+Cursor="Hand"
+Grid.Column="2"
+Click="btnMinimize_FullScreen"
+>
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#FFB1B1B1"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFE2E2E2" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="35" Height="20" CornerRadius="3" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+                <fa:ImageAwesome Icon="WindowMaximize" Margin="3"/>
+
+
+            </Button>
+            <Button x:Name="btnClose"
+BorderThickness="0"
+Foreground="White"
+FontSize="18"
+FontFamily="Century Gothic"
+Cursor="Hand"
+Grid.Column="3"
+Click="btnMinimize_Close">
+
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#FFB1B1B1"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFE2E2E2" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="35" Height="20" CornerRadius="3" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+                <fa:ImageAwesome Icon="Close" Margin="3"/>
+
+            </Button>
+        </Grid>
+
         <!-- RIGHT CONTENT AREA -->
         <DockPanel 
             x:Name="RightContentPanel"
-            Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
+            Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
             <view:dMainView DockPanel.Dock="Bottom"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </DockPanel>
 
-        <DockPanel
-            Grid.ColumnSpan="2"
-            Background="DarkGray" Margin="0,681.38,0,0" Grid.RowSpan="1">
-            <TextBlock  Text="Zalogowano jako:"
+
+        <TextBlock  Text="Zalogowano jako:"
                 FontSize="14"
                 FontWeight="Bold"
-                Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock  Text="fff"
-                x:Name="dUser"
+                Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Panel.ZIndex="1" Grid.Row="2" Margin="5,0,0,0"/>
+
+        <Border Background="DarkGray" Padding="10" Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock  Text=""
+                x:Name="txtblckUserName"
                 FontSize="14"
                 FontWeight="Bold"
-                Foreground="White" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Center">
-                <TextBlock.DataContext>
-                    <ViewModel:DoctorScreenView/>
-                </TextBlock.DataContext>
-            </TextBlock>
-        </DockPanel>
+                Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-4,0,0"/>
+        </Border>
 
 
 

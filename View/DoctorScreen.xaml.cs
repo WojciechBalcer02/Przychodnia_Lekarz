@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using Org.BouncyCastle.Asn1;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace PolMedUMG.View
 {
@@ -8,15 +10,19 @@ namespace PolMedUMG.View
     /// </summary>
     public partial class DoctorScreen : Window
     {
+
+        
         public DoctorScreen( )
         {
             InitializeComponent();
-            //Wyświetla nazwę użytkownika na dolnym pasku ekranu
-            dUser.Text = Properties.Settings.Default.User;
 
+            txtblckUserName.Text = SessionManager.CurrentUsername;
 
+            DataContext = this;
+
+            LoadContent(new dMainView()); // Domyślny widok
         }
-        public void dLoadContent(UserControl control)
+        public void LoadContent(UserControl control)//Ustawienie głównego ekranu
         {
 
             if (RightContentPanel != null)
@@ -25,7 +31,7 @@ namespace PolMedUMG.View
                 RightContentPanel.Children.Add(control);
             }
         }
-        private void dMyListBox_SelectionChanged(object sender, RoutedEventArgs e)
+        private void MyListBox_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (NavList.SelectedItem is ListBoxItem selectedItem)
             {
@@ -34,30 +40,51 @@ namespace PolMedUMG.View
                 switch (selectedText)
                 {
                     case "Strona główna":
-                        dLoadContent(new dMainView());
+                        LoadContent(new dMainView());
                         break;
                     case "Umów wizytę":
-                        dLoadContent(new dMakeAppointment());
+                        LoadContent(new dMakeAppointment());
                         break;
                     case "Kalendarz":
-                        dLoadContent(new dCalendar());
+                        LoadContent(new dCalendar());
                         break;
                     case "Cennik usług":
-                        dLoadContent(new dPricing());
+                        LoadContent(new dPricing());
                         break;
                     case "Wiadomości":
-                        dLoadContent(new dMessages());
+                        LoadContent(new dMessages());
                         break;
                     case "Ustawienia konta":
-                        dLoadContent(new dSettings());
+                        LoadContent(new dSettings());
                         break;
                     default:
                         break;
                 }
 
             }
+            
               
         }
-       
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e) //Minimalizuje ekran 
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void btnMinimize_Close(object sender, RoutedEventArgs e) //Wyłącza aplikację 
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void btnMinimize_FullScreen(object sender, RoutedEventArgs e) //
+        {
+            if (WindowState != WindowState.Maximized) WindowState = WindowState.Maximized;
+            else WindowState = WindowState.Normal;
+        }
     }
 }

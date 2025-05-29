@@ -209,7 +209,7 @@ Click="btnMinimize_Close">
                 x:Name="txtblckUserName"
                 FontSize="14"
                 FontWeight="Bold"
-                Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-4,0,0"/>
+                Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="115,0,0,0"/>
         </Border>
 
 

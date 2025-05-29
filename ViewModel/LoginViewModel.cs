@@ -40,7 +40,7 @@ namespace PolMedUMG.ViewModel
         private void Login()
         {
             // Przechowuje informacj� dotycz�ce po��czenia z baz� danych
-            SessionManager.connStrSQL = "server=bwpd1lnfwwmd8zooiosa-mysql.services.clever-cloud.com;uid=uf9nqf7gizjdvxmm;pwd=mV5lVFodqkbncFJJnxqQ;database=bwpd1lnfwwmd8zooiosa";
+            SessionManager.connStrSQL = "server=mysql-2e56cd6f-krzychu1324533-54ee.i.aivencloud.com;port=22051;uid=avnadmin;pwd=AVNS_OVYnYntZX_NGb7O_HZJ;database=defaultdb";
             //      nowy                "server=bb97fob4mmaybcvttjjk-mysql.services.clever-cloud.com;uid=uirqsom4re7q6gwn;pwd=ODh2O0u6eNj3uUkXsLYO;database=bb97fob4mmaybcvttjjk"
             //      stary               "server=bwpd1lnfwwmd8zooiosa-mysql.services.clever-cloud.com;uid=uf9nqf7gizjdvxmm;pwd=mV5lVFodqkbncFJJnxqQ;database=bwpd1lnfwwmd8zooiosa"
             SessionManager.CurrentUsername = _username;
@@ -92,12 +92,14 @@ namespace PolMedUMG.ViewModel
                             doctorWindow.Show();
                             Application.Current.MainWindow.Close();
                         }
-                        else
+                        else if (acctype.Equals("0"))
                         {
                             PatientScreen patientWindow = new PatientScreen();
                             patientWindow.Show();
                             Application.Current.MainWindow.Close();
                         }
+                        
+
 
                     }
                     catch (MySql.Data.MySqlClient.MySqlException ex)

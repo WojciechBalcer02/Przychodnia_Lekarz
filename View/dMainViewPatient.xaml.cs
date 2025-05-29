@@ -25,9 +25,12 @@ namespace PolMedUMG.View
         public dMainViewPatient(Patient patient)
         {
             InitializeComponent();
-            PatientNameText.Text = patient.FirstName;
-            PatientSurnameText.Text = patient.LastName;
-            PatientEmailText.Text = patient.Email;
+            PatientNameText.Text = "Imie: "+patient.FirstName;
+            PatientSurnameText.Text = "Nazwisko: "+patient.LastName;
+            PatientEmailText.Text = "Email: "+patient.Email;
+            PatientPhoneNumberText.Text = "Numer telefonu: "+patient.phoneNumber;
+            PatientAddressText.Text = "Adres: "+patient.Address;
+
         }
 
 

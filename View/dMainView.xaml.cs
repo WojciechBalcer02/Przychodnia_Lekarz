@@ -27,17 +27,19 @@ namespace PolMedUMG.View
         public string FirstName;
         public string LastName;
         public string Email;
-        /*public string Room;
-         public string picture;*/
+        public string roomNumber;
+        public string phoneNumber;
+        public string specialization;
 
 
 
-        public Doctor(string firstname, string lastname, string email)
+        public Doctor(string firstname, string lastname, string email,string room, string phone)
         {
             FirstName = firstname;
             LastName = lastname;
             Email = email;
-           /* Room = room;*/
+            roomNumber = room;
+            phoneNumber = phone;
         }
     }
 
@@ -47,17 +49,19 @@ namespace PolMedUMG.View
         public string FirstName;
         public string LastName;
         public string Email;
-        /*public string PhoneNumber;
-         public string picture;               
-         */
+        public string phoneNumber;
+        public string Address;
 
 
 
-        public Patient(string firstname, string lastname, string email)
+
+        public Patient(string firstname, string lastname, string email,string phone, string address)
         {
             FirstName = firstname;
             LastName = lastname;
             Email = email;
+            phoneNumber = phone;
+            Address = address;
 
         }
     }

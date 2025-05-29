@@ -59,7 +59,8 @@ namespace PolMedUMG.ViewModel
                     try
                     {
                        conn.Open();
-                       string sql= "SELECT `firstName`,`secondName`,`mail` FROM users WHERE uid  =@uid ";
+                        string sql = "SELECT users.firstName,users.secondName,users.mail,doctors.roomNumber,doctors.phoneNumber FROM doctors INNER JOIN users ON doctors.uid = users.uid WHERE users.uid = @uid";
+                       /*string sql= "SELECT `firstName`,`secondName`,`mail` FROM users WHERE uid  =@uid ";*/
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
@@ -67,7 +68,7 @@ namespace PolMedUMG.ViewModel
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);      
                                 DataTable dataTable = new DataTable();
                                 adapter.Fill(dataTable);
-                                Doctor dok = new Doctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2));
+                                Doctor dok = new Doctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
                                 conn.Close();
                                 dMainViewDoctor LookupdoctorWindow = new dMainViewDoctor(dok);
                                 LookupdoctorWindow.Show();                                  
@@ -110,7 +111,8 @@ namespace PolMedUMG.ViewModel
                     try
                     {
                         conn.Open();
-                        string sql = "SELECT `firstName`,`secondName`,`mail` FROM users WHERE uid  =@uid ";
+                        string sql = "SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE users.uid = @uid";
+                        /*string sql = "SELECT firstName`,`secondName`,`mail` FROM users WHERE uid  =@uid ";*/
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
@@ -118,7 +120,7 @@ namespace PolMedUMG.ViewModel
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2));
+                        Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
                         conn.Close();
                         dMainViewPatient LookuppatientWindow = new dMainViewPatient(pat);
                         LookuppatientWindow.Show();

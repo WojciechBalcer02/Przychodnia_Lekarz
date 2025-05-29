@@ -9,8 +9,8 @@
         WindowStyle="None"
         Background="Transparent"
         ResizeMode="NoResize"
-        Title="Informacje lekarza"  Width="600" Height="600" WindowStartupLocation="CenterScreen">
-    <Border Width="500"
+        Title="Informacje lekarza"  Width="800" Height="600" WindowStartupLocation="CenterScreen">
+    <Border Width="700"
             Height="500"
             Background="White"
             CornerRadius="20"
@@ -57,6 +57,8 @@
                 <TextBlock x:Name="DoctorNameText" HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 <TextBlock x:Name="DoctorSurnameText" HorizontalAlignment="Left" Margin="10,125,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 <TextBlock x:Name="DoctorEmailText" HorizontalAlignment="Left" Margin="10,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock x:Name="DoctorRoomNumberText" HorizontalAlignment="Left" Margin="10,165,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock x:Name="DoctorPhoneNumberText" HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
     </Border>

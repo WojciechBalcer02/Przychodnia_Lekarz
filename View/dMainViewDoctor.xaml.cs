@@ -25,9 +25,11 @@ namespace PolMedUMG.View
         public dMainViewDoctor(Doctor doktor) 
         {
             InitializeComponent();
-            DoctorNameText.Text = doktor.FirstName;
-            DoctorSurnameText.Text = doktor.LastName;
-            DoctorEmailText.Text = doktor.Email;
+            DoctorNameText.Text = "Imie: "+doktor.FirstName;
+            DoctorSurnameText.Text = "Nazwisko: "+doktor.LastName;
+            DoctorEmailText.Text = "Email: "+doktor.Email;
+            DoctorRoomNumberText.Text = "Numer gabientu: "+doktor.roomNumber;
+            DoctorPhoneNumberText.Text = "Numer telefonu: "+doktor.phoneNumber;
         }
         
 

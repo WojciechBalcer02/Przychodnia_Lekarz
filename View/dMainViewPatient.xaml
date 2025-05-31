@@ -45,20 +45,20 @@
             <!-- Under logo -->
             <Separator HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
-                   Margin="0,60,0,0"
+                   Margin="0,70,0,0"
                    Height="1"
                    Background="Gray"/>
 
 
 
             <!-- Info -->
-            <Grid Height="350" Width="auto" Margin="5,80,5,10">
-                <Image HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="80" Source="{DynamicResource di_PolMedLOGO}"/>
-                <TextBlock x:Name="PatientNameText" HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="10,125,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="10,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="10,165,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+            <Grid Height="350" Width="auto" Margin="5,70,5,10">
+                <Image HorizontalAlignment="Left" Height="100" Margin="10,5,0,0" VerticalAlignment="Top" Width="100" Source="/Images/Icons/profile.jpg"/>
+                <TextBlock  FontSize="15" x:Name="PatientNameText" HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="10,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="10,210,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="10,240,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
     </Border>

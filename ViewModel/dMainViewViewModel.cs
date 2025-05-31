@@ -83,7 +83,7 @@ namespace PolMedUMG.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Niepoprawny id lekarza");
+                    MessageBox.Show("Niepoprawne id lekarza");
                 }
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)

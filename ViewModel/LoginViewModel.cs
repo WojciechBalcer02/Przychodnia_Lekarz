@@ -49,29 +49,38 @@ namespace PolMedUMG.ViewModel
                 MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(SessionManager.connStrSQL);
                 conn.Open();
 
-                // Zapytanie do bazy o wybranego u�ytkownika
+                // Zapytanie do bazy o wybranego użytkownika
                 MySqlCommand query = new MySqlCommand();
                 query.Connection = conn;
-                query.CommandText = @"SELECT COUNT(*) FROM users WHERE uid = @uid AND pwd = @pwd;";
+                query.CommandText = @"SELECT COUNT(*) FROM users WHERE uid = @uid;";
                 query.Parameters.AddWithValue("@uid", _username);
-                query.Parameters.AddWithValue("@pwd", _password);
                 int userCount = (int)(long)query.ExecuteScalar();
                 conn.Close();
-                if (userCount > 0)
+
+                conn.Open();//Zapytanie do bazy o hash oraz salt danego użytkownika
+                MySqlCommand hashcheck = new MySqlCommand();
+                hashcheck.Connection = conn;
+                hashcheck.CommandText = @"SELECT pwdHash,pwdSalt FROM users WHERE uid = @uid;";
+                hashcheck.Parameters.AddWithValue("@uid", _username);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(hashcheck);
+                DataTable dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                conn.Close();
+                if (userCount > 0 && HashFunction.VerifyPassword(_password, dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<byte[]>(1)))
                 {
-                    // Istnieje u�ytkownik z takimi danymi
+                    // Istnieje dany użytkownik i hasło zgadza się z tym w bazie
                     try
                     {
                         conn.Open();
                         // Sprawdzamy jakiego typu jest u�ytkownik
                         MySqlCommand query2 = new MySqlCommand();
                         query2.Connection = conn;
-                        query2.CommandText = @"SELECT acc_type FROM users WHERE uid = @uid AND pwd = @pwd;";
+                        query2.CommandText = @"SELECT acc_type FROM users WHERE uid = @uid;";
                         query2.Parameters.AddWithValue("@uid", _username);
-                        query2.Parameters.AddWithValue("@pwd", _password);
                         String acctype = query2.ExecuteScalar().ToString();
 
                         SessionManager.accType = acctype;
+
                         // wyslanie do bazy daty logowania
                         MySqlCommand updateLoginTime = new MySqlCommand();
                         updateLoginTime.Connection = conn;
@@ -84,7 +93,9 @@ namespace PolMedUMG.ViewModel
                         // W zale�no�ci od typu u�ytkownika otwieramy odpowiednie okno
                         if (acctype.Equals("2"))
                         {
-                            MessageBox.Show("Zalogowano jako admin");
+                            AdminScreen adminWindow = new AdminScreen();
+                            adminWindow.Show();
+                            Application.Current.MainWindow.Close();
                         }
                         else if (acctype.Equals("1"))
                         {
@@ -109,7 +120,7 @@ namespace PolMedUMG.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Niepoprawny login lub has�o");
+                    MessageBox.Show("Niepoprawny login lub hasło");
                 }
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)

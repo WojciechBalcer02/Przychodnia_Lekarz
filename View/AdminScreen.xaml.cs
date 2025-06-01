@@ -35,5 +35,26 @@ namespace PolMedUMG.View
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
         }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e) //Minimalizuje ekran 
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void btnMinimize_Close(object sender, RoutedEventArgs e) //Wyłącza aplikację 
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void btnMinimize_FullScreen(object sender, RoutedEventArgs e) //Fullscreanuje aplikację
+        {
+            if (WindowState != WindowState.Maximized) WindowState = WindowState.Maximized;
+            else WindowState = WindowState.Normal;
+        }
+
+        
     }
+
+
+
 }

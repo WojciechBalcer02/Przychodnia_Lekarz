@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Icons\profile.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageReference Include="MySql.Data" Version="9.2.0" />
@@ -16,6 +20,7 @@
 
   <ItemGroup>
     <Resource Include="Images\Icons\PolMedLOGO.xaml" />
+    <Resource Include="Images\Icons\profile.jpg" />
   </ItemGroup>
 
   <ItemGroup>

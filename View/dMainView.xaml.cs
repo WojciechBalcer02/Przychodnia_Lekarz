@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PolMedUMG.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,21 +19,71 @@ namespace PolMedUMG.View
     /// <summary>
     /// Interaction logic for dMainView.xaml
     /// </summary>
+    /// 
+
+    public class Doctor
+    {
+
+        public string FirstName;
+        public string LastName;
+        public string Email;
+        public string roomNumber;
+        public string phoneNumber;
+        public string specialization;
+
+
+
+        public Doctor(string firstname, string lastname, string email,string room, string phone)
+        {
+            FirstName = firstname;
+            LastName = lastname;
+            Email = email;
+            roomNumber = room;
+            phoneNumber = phone;
+        }
+    }
+
+    public class Patient
+    {
+
+        public string FirstName;
+        public string LastName;
+        public string Email;
+        public string phoneNumber;
+        public string Address;
+
+
+
+
+        public Patient(string firstname, string lastname, string email,string phone, string address)
+        {
+            FirstName = firstname;
+            LastName = lastname;
+            Email = email;
+            phoneNumber = phone;
+            Address = address;
+
+        }
+    }
+
     public partial class dMainView : UserControl
     {
         public dMainView()
         {
             InitializeComponent();
+            DataContext = new dMainViewViewModel();
         }
-        private void dtxtPatientSearch_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtPatientSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (dtxtPatientSearch.Text != "") { dLblPeselPlaceholder.Visibility = Visibility.Hidden; }
-            else { dLblPeselPlaceholder.Visibility = Visibility.Visible; }
+            if (txtPatientSearch.Text != "") { LblPeselPlaceholder.Visibility = Visibility.Hidden; }
+            else { LblPeselPlaceholder.Visibility = Visibility.Visible; }
         }
-        private void dtxtDoctorSearch_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtDoctorSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (dtxtDoctorSearch.Text != "") { dLblIdPlaceholder.Visibility = Visibility.Hidden; }
-            else { dLblIdPlaceholder.Visibility = Visibility.Visible; }
-        }        
+            if (txtDoctorSearch.Text != "") { LblIdPlaceholder.Visibility = Visibility.Hidden; }
+            else { LblIdPlaceholder.Visibility = Visibility.Visible; }
+        }  
+        
+
     }
 }

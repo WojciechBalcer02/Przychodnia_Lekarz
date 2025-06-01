@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Org.BouncyCastle.Asn1;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -9,16 +10,18 @@ namespace PolMedUMG.View
     /// </summary>
     public partial class DoctorScreen : Window
     {
+     
         public DoctorScreen( )
         {
             InitializeComponent();
+
             txtblckUserName.Text = SessionManager.CurrentUsername;
 
             DataContext = this;
 
-            LoadContent(new dMainView()); //Ładowanie domyślnego widoku
+            LoadContent(new dMainView()); // Domyślny widok
         }
-        public void LoadContent(UserControl control)
+        public void LoadContent(UserControl control)//Ustawienie głównego ekranu
         {
 
             if (RightContentPanel != null)
@@ -58,6 +61,7 @@ namespace PolMedUMG.View
                 }
 
             }
+            
               
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -81,6 +85,5 @@ namespace PolMedUMG.View
             if (WindowState != WindowState.Maximized) WindowState = WindowState.Maximized;
             else WindowState = WindowState.Normal;
         }
-
     }
 }

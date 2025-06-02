@@ -31,7 +31,7 @@ namespace PolMedUMG.View
         }
         private void btn_acc_create(object sender, RoutedEventArgs e)
         {
-            var Conv = new AccountCreation();
+            var Conv = new PatientAccountCreation();
 
             var parentWindow = Window.GetWindow(this) as LoginScreen;
 

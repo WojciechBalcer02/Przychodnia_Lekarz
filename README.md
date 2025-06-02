@@ -1,1 +1,1 @@
-Główne repozytorium do projektu przychodni od strony lekarza.
+Strona pacjenci i lekarze, bez konfliktów, zmiany kodu pacjenta aby działała z naszą bazą. Trzeba zmienić tworzenie kont pacjenta aby dodawały do pacjenta adress, pesel i nr telefonu, zmienić źródło telefonu dla konwersacji aby brały je z bazy i usunąć dodawanie nr telefonu przy tworzeniu wizyt od strony pacjenta.

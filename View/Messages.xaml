@@ -1,12 +1,109 @@
 ﻿<UserControl x:Class="PolMedUMG.View.Messages"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Height="Auto" Width="Auto">
+             xmlns:local="clr-namespace:PolMedUMG.View"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             Width="Auto" Height="Auto">
 
-    <TextBlock Text="Wiadomości"
-           FontSize="26"
-           FontWeight="Bold"
-           HorizontalAlignment="Center"
-           Margin="0,0,0,20"/>
+    <UserControl.Resources>
+        <local:StatusToIconConverter x:Key="StatusToIconConverter"/>
+        <Style TargetType="ListViewItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="2,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="10">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="10" x:Name="MainArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <!-- Nagłówek -->
+        <StackPanel Margin="20" Grid.Row="0">
+            <TextBlock Text="Wiadomości"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,5"/>
+        </StackPanel>
+
+        <!-- Lista konwersacji -->
+
+        <ListView x:Name="ConversationList" ItemsSource="{Binding Conversations}" SelectionChanged="ConversationList_SelectionChanged" BorderThickness="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="5" Padding="8" CornerRadius="10" BorderBrush="LightGray" BorderThickness="1" >
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FFD0D0D0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="60"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- zdjecie doktora -->
+                            <Image Grid.Column="0" Source="{Binding DoctorImage}" Width="10" Height="10" />
+
+                            <!-- imie nazwisko doktora -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Sender}" HorizontalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                            </StackPanel>
+
+                            <!-- data ostatniej wiadomosci -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Date , StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16" Foreground="Gray"/>
+                            </StackPanel>
+
+                            <!-- Status z ikonka -->
+                            <TextBlock Grid.Column="3" Text="{Binding StatusPatient}" VerticalAlignment="Center" Margin="10,0" TextAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+                            <StackPanel Grid.Column="4">
+                                <fa:ImageAwesome Grid.Column="4" Icon="{Binding StatusPatient, Converter={StaticResource StatusToIconConverter}}" Margin="12"  Width="30" Height="30"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- Scroll po stronach -->
+        <DockPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Bottom">
+            <Button Content="◀" Width="30" Height="30" Margin="10,0" Background="Transparent" BorderBrush="Transparent" Foreground="#476EFF" FontSize="18" Click="PrevPage_Click"/>
+            <Border Background="#8093FF" CornerRadius="10" Padding="5,2" Margin="5,0">
+                <TextBlock x:Name="PageCounterText" Text="1/1" Foreground="White" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Button Content="▶" Width="30" Height="30" Margin="10,0" Background="Transparent" BorderBrush="Transparent" Foreground="#476EFF" FontSize="18" Click="NextPage_Click"/>
+        </DockPanel>
+    </Grid>
 </UserControl>

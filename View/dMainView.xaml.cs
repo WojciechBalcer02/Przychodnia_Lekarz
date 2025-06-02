@@ -21,7 +21,7 @@ namespace PolMedUMG.View
     /// </summary>
     /// 
 
-    public class Doctor
+    public class dDoctor
     {
 
         public string FirstName;
@@ -33,7 +33,7 @@ namespace PolMedUMG.View
 
 
 
-        public Doctor(string firstname, string lastname, string email,string room, string phone)
+        public dDoctor(string firstname, string lastname, string email,string room, string phone)
         {
             FirstName = firstname;
             LastName = lastname;

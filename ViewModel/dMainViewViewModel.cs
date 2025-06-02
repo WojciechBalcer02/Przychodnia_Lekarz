@@ -16,7 +16,7 @@ namespace PolMedUMG.ViewModel
     public class dMainViewViewModel : INotifyPropertyChanged
     {
         private string _doctorusername;
-        private string _patientUsername;
+        private string _patientPesel;
 
         public string DoctorUsername
         {
@@ -24,10 +24,10 @@ namespace PolMedUMG.ViewModel
             set { _doctorusername = value; OnPropertyChanged(); }
         }
 
-        public string PatientUsername
+        public string PatientPesel
         {
-            get => _patientUsername;
-            set { _patientUsername = value; OnPropertyChanged(); }
+            get => _patientPesel;
+            set { _patientPesel = value; OnPropertyChanged(); }
         }
 
         public ICommand DoctorLookup { get; }
@@ -69,7 +69,7 @@ namespace PolMedUMG.ViewModel
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);      
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        Doctor dok = new Doctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
+                        dDoctor dok = new dDoctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
                         conn.Close();
 
                         //Stworzenie nowego okienka inforamycjnego z danymi lekarz
@@ -102,11 +102,11 @@ namespace PolMedUMG.ViewModel
                 MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(SessionManager.connStrSQL);
                 conn.Open();
 
-                // Zapytanie do bazy o wybranego u�ytkownika
+                // Zapytanie do bazy o użytkownika z danym peselem
                 MySqlCommand query = new MySqlCommand();
                 query.Connection = conn;
-                query.CommandText = @"SELECT COUNT(*) FROM users WHERE uid = @uid AND acc_type='0';";
-                query.Parameters.AddWithValue("@uid", _patientUsername);
+                query.CommandText = @"SELECT COUNT(*) FROM patients WHERE PESEL = @pesel;";
+                query.Parameters.AddWithValue("@pesel", _patientPesel);
                 int userCount = (int)(long)query.ExecuteScalar();
                 conn.Close();
                 if (userCount > 0)
@@ -115,11 +115,11 @@ namespace PolMedUMG.ViewModel
                     {
                         //Zapytanie do bazy pobierające dane pacjenta
                         conn.Open();
-                        string sql = "SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE users.uid = @uid";
+                        string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.PESEL = @pesel";
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
-                        cmd.Parameters.AddWithValue("@uid", _patientUsername);
+                        cmd.Parameters.AddWithValue("@pesel", _patientPesel);
                         //Dane z kwerendy dodane są do tabeli danych
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                         DataTable dataTable = new DataTable();
@@ -138,7 +138,7 @@ namespace PolMedUMG.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Niepoprawny pesel pacjenta");
+                    MessageBox.Show("Nie istnieje pacjent o podanym PESELu");
                 }
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)

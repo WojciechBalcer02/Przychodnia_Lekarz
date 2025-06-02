@@ -11,352 +11,57 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Tytuł -->
         <TextBlock Grid.Row="0"
-                   Text="NASI SPECJALIŚCI"
-                   FontSize="32"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,20" />
+               Text="NASI SPECJALIŚCI"
+               FontSize="32"
+               FontWeight="Bold"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,20" />
 
-        <!-- Siatka 4×3 -->
-        <UniformGrid Grid.Row="1"
-                     Rows="3"
-                     Columns="4"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Stretch"
-                     Margin="125,0,125,0">
+        <!-- Kafelki -->
+        <ItemsControl Grid.Row="1"
+                  ItemsSource="{Binding Specialists}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4"
+                             Rows="3"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Margin="125,0,125,0"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-            <!-- Kafelek #1 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Stethoscope "
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Lekarz rodzinny"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Anna Nowak"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #2 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Heartbeat"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Kardiolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Piotr Zieliński"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #3 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Shield"
-                                     Margin="6"
-                                     Foreground="#333"/>
-                </Border>
-                <TextBlock Text="Dermatolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Marta Kaczmarek"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #4 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Home"
-                                     Margin="6"
-                                     Foreground="#333"/>
-                </Border>
-                <TextBlock Text="Pediatra"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Tomasz Wójcik"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #5 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     Margin="6"
-                                     Foreground="#333"/>
-                </Border>
-                <TextBlock Text="Dentysta"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Agnieszka Pich"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #6 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Ginekolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Michał Kamiński"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #7 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Bed"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Ortopeda"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Katarzyna Woźniak"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #8 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Endokrynolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Marcin Jankowskio"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #9 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="Eye"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Okulista"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Barbara Wiśniewska"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #10 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Neurolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Łukasz Kowalczyk"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #11 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Laryngolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Ewa Szymańska"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-            <!-- Kafelek #12 -->
-            <StackPanel Margin="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Border Width="80"
-                        Height="80"
-                        CornerRadius="30"
-                        Padding="5"
-                        BorderBrush="#969696"
-                        BorderThickness="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                    <fa:ImageAwesome Icon="UserMd"
-                                     ToolTip="Doktor"
-                                     Margin="6"
-                                     Foreground="#333" />
-                </Border>
-                <TextBlock Text="Reumatolog"
-                           FontWeight="Bold"
-                           FontSize="15"
-                           TextAlignment="Center"
-                           Margin="0,10,0,0" />
-                <TextBlock Text="dr Paweł Mak"
-                           FontSize="13"
-                           Foreground="#000"
-                           TextAlignment="Center" />
-            </StackPanel>
-
-        </UniformGrid>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                        <Border 
+                            MouseLeftButtonDown="Specialist_Click"
+                            Width="80"
+                            Height="80"
+                            CornerRadius="30"
+                            Padding="5"
+                            BorderBrush="#969696"
+                            BorderThickness="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <fa:ImageAwesome Icon="{Binding Icon}"
+                                         Margin="6"
+                                         Foreground="#8093FF" />
+                        </Border>
+                        <TextBlock Text="{Binding Title}"
+                               FontWeight="Bold"
+                               FontSize="15"
+                               TextAlignment="Center"
+                               Margin="0,10,0,0" />
+                        <TextBlock Text="{Binding Name}"
+                               FontSize="13"
+                               Foreground="#000"
+                               TextAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

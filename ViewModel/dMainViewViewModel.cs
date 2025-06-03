@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 
 namespace PolMedUMG.ViewModel
 {
     public class dMainViewViewModel : INotifyPropertyChanged
     {
         private string _doctorusername;
-        private string _patientPesel;
+        private string _patientPeselorUID;
 
         public string DoctorUsername
         {
@@ -26,9 +27,11 @@ namespace PolMedUMG.ViewModel
 
         public string PatientPesel
         {
-            get => _patientPesel;
-            set { _patientPesel = value; OnPropertyChanged(); }
+            get => _patientPeselorUID;
+            set { _patientPeselorUID = value; OnPropertyChanged(); }
         }
+
+
 
         public ICommand DoctorLookup { get; }
 
@@ -101,15 +104,39 @@ namespace PolMedUMG.ViewModel
             {
                 MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(SessionManager.connStrSQL);
                 conn.Open();
-
                 // Zapytanie do bazy o użytkownika z danym peselem
                 MySqlCommand query = new MySqlCommand();
                 query.Connection = conn;
                 query.CommandText = @"SELECT COUNT(*) FROM patients WHERE PESEL = @pesel;";
-                query.Parameters.AddWithValue("@pesel", _patientPesel);
+                query.Parameters.AddWithValue("@pesel", _patientPeselorUID);
                 int userCount = (int)(long)query.ExecuteScalar();
+                Boolean peselFound = false;
+                Boolean uidFound = false;
                 conn.Close();
-                if (userCount > 0)
+                //Jeżeli nie ma pacjenta o danym peselu to sprawdzamy czy to co podał użytkownik nie jest uid pacjenta
+                if (userCount == 0)
+                {
+
+                    peselFound = false;
+                    conn.Open();
+                    MySqlCommand query2 = new MySqlCommand();
+                    query2.Connection = conn;
+                    query2.CommandText = @"SELECT COUNT(*) FROM patients WHERE uid = @uid;";
+                    query2.Parameters.AddWithValue("@uid", _patientPeselorUID);
+                    int userCountUid = (int)(long)query2.ExecuteScalar();
+                    conn.Close();
+                    if (userCountUid == 0)
+                    {
+                        uidFound = false;
+                    }
+                    else { uidFound = true; }
+                }
+                else { peselFound = true; }
+                
+
+
+                //Jeżeli istnieje pacjenta z danym peselem to pobieramy jego dane
+                if (peselFound == true)
                 {
                     try
                     {
@@ -119,7 +146,7 @@ namespace PolMedUMG.ViewModel
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
-                        cmd.Parameters.AddWithValue("@pesel", _patientPesel);
+                        cmd.Parameters.AddWithValue("@pesel", _patientPeselorUID);
                         //Dane z kwerendy dodane są do tabeli danych
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                         DataTable dataTable = new DataTable();
@@ -136,9 +163,32 @@ namespace PolMedUMG.ViewModel
                         MessageBox.Show(ex.Message);
                     }
                 }
+                //Jeżeli istnieje pacjenta z danym uid to pobieramy jego dane
+                else if (uidFound == true)
+                {
+                    //Zapytanie do bazy pobierające dane pacjenta
+                    conn.Open();
+                    string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.uid = @uid";
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = conn;
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@uid", _patientPeselorUID);
+                    //Dane z kwerendy dodane są do tabeli danych
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+                    Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
+                    conn.Close();
+
+                    //Stworzenie nowego okienka inforamycjnego z danymi pacjenta
+                    dMainViewPatient LookuppatientWindow = new dMainViewPatient(pat);
+                    LookuppatientWindow.Show();
+                }
                 else
                 {
-                    MessageBox.Show("Nie istnieje pacjent o podanym PESELu");
+
+                    MessageBox.Show("Nie istnieje pacjent o podanym PESELu lub danym UID");
+
                 }
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)

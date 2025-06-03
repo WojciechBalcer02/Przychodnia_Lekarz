@@ -12,13 +12,15 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Text="Historia wizyt"
+        <TextBlock
                    FontSize="26"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,20">
+            <Run Language="pl-pl" Text="Wyniki badań"/>
+            </TextBlock>
 
-        <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="1">
             <!-- Headings -->
             <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
                 <TextBlock Text="Data" Width="120" FontWeight="Bold"/>

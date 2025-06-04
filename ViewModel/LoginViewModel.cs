@@ -94,9 +94,9 @@ namespace PolMedUMG.ViewModel
                         query2.Connection = conn;
                         query2.CommandText = @"SELECT acc_type FROM users WHERE uid = @uid;";
                         query2.Parameters.AddWithValue("@uid", _username);
-                        String acctype = query2.ExecuteScalar().ToString();
+                        string acctype = query2.ExecuteScalar().ToString();
 
-                        SessionManager.accType = acctype;
+                        SessionManager.accType = Convert.ToByte(acctype);
 
                         MySqlCommand recpass = new MySqlCommand();
                         recpass.Connection = conn;

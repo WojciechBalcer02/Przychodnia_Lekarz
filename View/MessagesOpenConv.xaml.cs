@@ -21,10 +21,10 @@ namespace PolMedUMG.View
             InitializeComponent();
 
             var repo = new MessageRepository();
+            //Pobranie wiadomości dotyczących naszego pacjenta
+            Messages = repo.GetMessagesFrom(doctorName,SessionManager.CurrentUsername);
 
-            Messages = repo.GetMessagesFrom(doctorName, SessionManager.CurrentUsername);
-
-            repo.markAsReaded(doctorName, SessionManager.CurrentUsername);
+            repo.markAsReaded(doctorName);
 
             this.date = date;
             this.doctorName = doctorName;
@@ -63,6 +63,7 @@ namespace PolMedUMG.View
                 }
             }
         }
+        //Obsługa przycisku powrotu do głównego ekranu wiadomości
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             if (MainArea != null)
@@ -71,6 +72,7 @@ namespace PolMedUMG.View
                 MainArea.Children.Add(new Messages());
             }
         }
+        //Obsługa przycisku wysłanie wiadomości do lekarza
         private void Send_Click(object sender, RoutedEventArgs e)
         {
             string messageText = MessageInput.Text;
@@ -78,10 +80,12 @@ namespace PolMedUMG.View
             string receiver = doctorName;
             DateTime data = DateTime.Now;
             string dataAsString = data.ToString();
+            byte receivertype = 1;
+            byte sendertype = 0;
 
             if (!string.IsNullOrWhiteSpace(messageText))
             {
-                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText,"nowa wiadomość", "dummy", "Odczytane");
+                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText,"nowa wiadomość", "dummy", "Odczytane",receivertype,sendertype);
 
                 Messages.Add(newMsg);
 
@@ -94,9 +98,9 @@ namespace PolMedUMG.View
                     try
                     {
                         conn.Open();
-
-                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage, statusPatient) 
-                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage, @statusPatient);";
+                        //Wrzucenie wiadomości do bazy danych
+                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage, statusPatient, sender_acctype,receiver_acctype) 
+                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage, @statusPatient,@sendertype, @receivertype);";
 
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
@@ -107,6 +111,8 @@ namespace PolMedUMG.View
                             cmd.Parameters.AddWithValue("@status", "nowa wiadomość");
                             cmd.Parameters.AddWithValue("@doctorImage", "dummy");
                             cmd.Parameters.AddWithValue("@statusPatient", "Odczytane");
+                            cmd.Parameters.AddWithValue("@sendertype", sendertype);
+                            cmd.Parameters.AddWithValue("@receivertype", receivertype);
 
                             cmd.ExecuteNonQuery();
                         }
@@ -123,7 +129,7 @@ namespace PolMedUMG.View
                 
             }
         }
-        
+        //Funkcja sprawdzająca użytkownika wiadomości i obecnego użytkownika, służąca do zmiany koloru
         public static bool compare(object value)
         {
             string sender = value as string;
@@ -133,18 +139,26 @@ namespace PolMedUMG.View
             bool areEqual = sender != null && user != null && sender == user;
             bool equalsMethod = sender != null && user != null && string.Equals(sender, user, StringComparison.Ordinal);
 
-            bool IsPatient = equalsMethod;
+            return equalsMethod;
+        }
 
-            return IsPatient;
+        private void MessageInput_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                Send_Click(sender,e);
+            }
         }
     }
+
+    //Konwerter do zmianay koloru wiadomości w zależności od tego kto ją wysłał
     public class BoolToBackgroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool IsPatient = MessagesOpenConv.compare(value);
+            bool IsSender = MessagesOpenConv.compare(value);
 
-            return IsPatient ? Brushes.LightGray : (Brush)new BrushConverter().ConvertFromString("#5C84E2");
+            return IsSender ? Brushes.LightGray : (Brush)new BrushConverter().ConvertFromString("#5C84E2");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -152,13 +166,14 @@ namespace PolMedUMG.View
             throw new NotImplementedException();
         }
     }
+    //Konwerter do zmiany strony wyświetlania wiadomości w zależności od tego kto ją wysłał
     public class BoolToAlignmentConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool IsPatient = MessagesOpenConv.compare(value);
+            bool IsSender = MessagesOpenConv.compare(value);
 
-            return IsPatient ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+            return IsSender ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -166,13 +181,14 @@ namespace PolMedUMG.View
             throw new NotImplementedException();
         }
     }
+    //Konwertery do zmiany koloru czcionka wiadomości w zależności od tego kto ją wysłał
     public class BoolToForegroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool IsPatient = MessagesOpenConv.compare(value);
+            bool IsSender = MessagesOpenConv.compare(value);
 
-            return IsPatient ? Brushes.Black : Brushes.White;
+            return IsSender ? Brushes.Black : Brushes.White;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -181,3 +197,5 @@ namespace PolMedUMG.View
         }
     }
 }
+
+

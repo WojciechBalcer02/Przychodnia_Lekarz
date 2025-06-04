@@ -1,21 +1,31 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using Google.Protobuf.WellKnownTypes;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PolMedUMG.View
-{
+{   //Klasa wiadomości między lekarzem a pacjentem
     public class ConvMessages
     {
-        public string Sender { get; set; }
-        public string Receiver { get; set; }
-        public DateTime Date { get; set; }
-        public string Content { get; set; }
-        public string DoctorImage { get; set; }
-        public string StatusPatient { get; set;  }
-        public string StatusDoctor { get; set; }
+        public string Sender { get; set; } //Nadawca
+        public byte SenderAccType { get; set; }//Typ konta nadawcy
+        public string Receiver { get; set; }//Odbiorca
+        public byte ReceiverAccType { get; set; }//Typ konta odbciorcy
+        public DateTime Date { get; set; }//Data wysłania
+        public string Content { get; set; }//Zawartośc wiadomości
+        public string DoctorImage { get; set; }//Obraz lekarza/ ogólnie obraz narazie i pewnie na zawsze nic nie bedzie robic
+        public string StatusPatient { get; set;  }//Status odczytania wiadomości przez pacjenta
+        public string StatusDoctor { get; set; }//Status odczytania wiadomości przez lekarza
 
-        public ConvMessages(string sender, string receiver, DateTime date, string content, string statusDoctor, string doctorImage, string statusPatient)
+        //Konstruktor tworzący obiek wiadomości
+        public ConvMessages(string sender,string receiver, DateTime date, string content, string statusDoctor, string doctorImage, string statusPatient, byte sendertype, byte receivertype)
         {
             Sender = sender;
             Receiver = receiver;
@@ -24,11 +34,16 @@ namespace PolMedUMG.View
             StatusDoctor = statusDoctor;
             DoctorImage = doctorImage;
             StatusPatient = statusPatient;
+            SenderAccType = sendertype;
+            ReceiverAccType = receivertype;
         } 
         
     }
+
+    //Klasa repozytorium wiadomości
     public class MessageRepository
     {
+        //Metoda pobierające wszystkie wiadomości z bazy których zalogowany użytkownik jest nadawcą lub odbiorcą
         public List<ConvMessages> GetMessagesFromDB()
         {
             List<ConvMessages> conversations = new List<ConvMessages>();
@@ -38,9 +53,19 @@ namespace PolMedUMG.View
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT uid, sender, receiver, date, content, status, doctorImage, statusPatient FROM Conversations;";
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    string sql = @"SELECT sender, receiver, date, content, 
+                                status, doctorImage, statusPatient,
+                                sender_acctype,
+                                receiver_acctype
+                                FROM Conversations WHERE sender = @sender OR receiver = @receiver;";
+
+
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@sender", SessionManager.CurrentUsername);
+                    cmd.Parameters.AddWithValue("@receiver", SessionManager.CurrentUsername);
+                    cmd.Connection = conn;
+                    MySqlDataReader reader = cmd.ExecuteReader();
                     {
                         while (reader.Read())
                         {
@@ -51,40 +76,28 @@ namespace PolMedUMG.View
                                 reader["content"].ToString(),
                                 reader["status"].ToString(),
                                 reader["doctorImage"].ToString(),
-                                reader["statusPatient"].ToString()
+                                reader["statusPatient"].ToString(),
+                                Convert.ToByte(reader["sender_acctype"]),
+                                Convert.ToByte(reader["receiver_acctype"])
                             );
                             conversations.Add(msg);
                         }
                     }
+                    conn.Close();
                 }
+                
                 catch (Exception ex)
                 {
-                    // Obsługa błędów
+                    // Obsługa błędów przy pobieraniu danych z bazy
                     Console.WriteLine("Błąd podczas pobierania danych: " + ex.Message);
                 }
             }
 
             return conversations;
         }
-        public List<ConvMessages> GetMessages() // ta metoda ma wiadomości testowe niezwiązane z bazą danych
-        {
 
-            var ConvMessages = new List<ConvMessages>
-            {
-                new ConvMessages("dr. Witt", "patient", new DateTime(2004, 12, 12), "Witam serdecznie kochaniutki", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("patient", "dr. Witt", DateTime.Now, "Cześć, jak się masz?", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("dr. Witt", "Patient", DateTime.Now, "Nie twoj interes kasztanie", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("dr. Marek Towarek", "patient", DateTime.Now, "tescik1", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("patient", "dr. Tomasz Kowalski", DateTime.Now, "tescik2", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("patient", "dr. Andrzej Pędrak", DateTime.Now, "tescik3333", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("dr. Witt", "patient", DateTime.Now, "w sumie dziala", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("patient", "dr. Witt", DateTime.Now, "a no", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("patient", "dr. Eryk Fryderyk", DateTime.Now, "a no", "Odczytane" , "dummy", "Odczytane"),
-                new ConvMessages("dr. Moczybroda", "patient", DateTime.Now, "siema byku jak tam kodowanie", "nowa wiadomość" , "dummy", "Odczytane")
-            };
-            return ConvMessages;
-        }
-        public List<ConvMessages> GetMessagesFrom(string doctorName, string patientName) // ta metoda zwraca wszystkie wiadomosci miedzy dwoma uzytkownikami
+        //Metoda zwraca wszystkie wiadomości miedzy dwoma użytkownikami
+        public List<ConvMessages> GetMessagesFrom(string doctorName, string patientName)
         {
             var ConvMessages = GetMessagesFromDB();
             var filteredMessages = new List<ConvMessages>();
@@ -100,56 +113,52 @@ namespace PolMedUMG.View
 
             return filteredMessages;
         }
-        public List<ConvMessages> ListOfUniqueDoctors(string user) //ta metoda mówi o unikalnych lekarzach z którymi miał kontakt dany pacjent, zapisuje ich w "Sender"
-        {
-            var allMessages = GetMessagesFromDB();
 
-            var uniqueDoctors = allMessages
-                .Where(m => m.Sender.Equals(user, StringComparison.OrdinalIgnoreCase) || m.Receiver.Equals(user, StringComparison.OrdinalIgnoreCase))
-                .Select(m => new
-                {
-                    Doctor = m.Sender.Equals(user, StringComparison.OrdinalIgnoreCase) ? m.Receiver : m.Sender,
-                    Message = m
-                })
-                .Where(x => x.Doctor.ToLower().StartsWith("dr."))
-                .GroupBy(x => x.Doctor, StringComparer.OrdinalIgnoreCase)
-                .Select(g =>
-                {
-                    var lastMsg = g.Last().Message;
-                    return new ConvMessages(
-                        sender: g.Key,               // ustawiamy Sender na nazwę doktora (g.Key)
-                        receiver: lastMsg.Receiver,
-                        date: lastMsg.Date,
-                        content: lastMsg.Content,
-                        statusDoctor: lastMsg.StatusDoctor,
-                        statusPatient: lastMsg.StatusPatient,
-                        doctorImage: lastMsg.DoctorImage
-                    );
-                })
+        //Metoda zwraca listę wszystkich unikalnych lekarzy z danej listy wiadomości
+        public List<ConvMessages> ListOfUniqueDoctors(string user)
+        {
+            return GetMessagesFromDB()
+                .Where(m => (m.ReceiverAccType == 1 && m.Sender == user) || (m.SenderAccType == 1 && m.Receiver==user))
+                .GroupBy(m => m.SenderAccType == Convert.ToByte("1") ? m.Sender : m.Receiver)
+                .Select(g => g.Last())
                 .ToList();
-
-            return uniqueDoctors;
         }
-        public void markAsReaded(string doctorName, string patientName) // markuje jako przeczytane wiadomości
+        //Metoda zwraca listę wszystkich unikalnych pacjentów z danej listy wiadomości
+        public List<ConvMessages> ListOfUniquePatients(string user)
         {
-            string connectionString = SessionManager.connStrSQL;
+            return GetMessagesFromDB()
+                .Where(m => (m.ReceiverAccType == 0 && m.Sender == user) || (m.SenderAccType == 0 && m.Receiver == user))
+                .GroupBy(m => m.SenderAccType == Convert.ToByte("0") ? m.Sender : m.Receiver)
+                .Select(g => g.Last())
+                .ToList();
+        }
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+        //Funkcja oznaczająca wiadomość jako nie przeczytaną dla podanego użytkownika i przeczytaną dla zalogowanego użytkownika
+        public void markAsReaded(string receiver)
+        {
+            string statusField = SessionManager.accType == 1
+                ? "status" : "statusPatient";
+
+            string query = $@"UPDATE Conversations 
+                    SET {statusField} = 'Odczytane' 
+                    WHERE ((sender = @counterpart AND receiver = @user)
+                        OR (sender = @user AND receiver = @counterpart))
+                    AND {statusField} = 'nowa wiadomość'";
+            try
             {
-                conn.Open();
-                string query = @"UPDATE Conversations SET statusPatient = @newStatus WHERE Sender = @doctorName AND Receiver = @patientName AND statusPatient = @currentStatus";
-
-                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                using (MySqlConnection conn = new MySqlConnection(SessionManager.connStrSQL))
                 {
-                    cmd.Parameters.AddWithValue("@newStatus", "Odczytane");
-                    cmd.Parameters.AddWithValue("@currentStatus", "nowa wiadomość");
-                    cmd.Parameters.AddWithValue("@doctorName", doctorName);
-                    cmd.Parameters.AddWithValue("@patientName", patientName);
-
-                    int affected = cmd.ExecuteNonQuery();
-                    Debug.WriteLine($"[DEBUG] Zaktualizowano {affected} wiadomości.");
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.AddWithValue("@counterpart", receiver);
+                        cmd.Parameters.AddWithValue("@user", SessionManager.CurrentUsername);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
+            catch (Exception ex) { Console.WriteLine("Błąd podczas aktualizowania statusu odczytania wiadomości: " + ex.Message); }
         }
     }
 }

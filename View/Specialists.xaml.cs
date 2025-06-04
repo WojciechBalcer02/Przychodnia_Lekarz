@@ -28,7 +28,7 @@ namespace PolMedUMG.View
             var repo = new MessageRepository();
             // GetMessagesFrom zwraca listę ConvMessages posortowaną od najstarszych
             var history = repo
-                .GetMessagesFrom(spec.Name, SessionManager.CurrentUsername)
+                .GetMessagesFrom(spec.Uid, SessionManager.CurrentUsername)
                 .OrderBy(m => m.Date)
                 .ToList();
 
@@ -39,7 +39,7 @@ namespace PolMedUMG.View
 
             var chatControl = new MessagesOpenConv(
                 date,
-                spec.Name,
+                spec.Uid,
                 img,
                 lastMsg
             );

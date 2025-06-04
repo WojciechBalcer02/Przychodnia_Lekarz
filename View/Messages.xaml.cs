@@ -19,10 +19,12 @@ namespace PolMedUMG.View
         private int currentPage = 1;
 
         private int pageSize = 6;
+
         private int totalPages => (int)Math.Ceiling((double)AllConversations.Count / pageSize);
 
-        public Messages()
+        public Messages()//Konwersacje pacjenta z lekarzami, sortowane odwrotnie chronologicznie
         {
+            
             InitializeComponent();
 
             var varii = new MessageRepository();
@@ -34,6 +36,8 @@ namespace PolMedUMG.View
             LoadCurrentPage();
 
         }
+
+        //Załadowanie obecnej strony z konwersacjami
         private void LoadCurrentPage()
         {
             var pageVisits = AllConversations
@@ -48,6 +52,7 @@ namespace PolMedUMG.View
             PageCounterText.Text = $"{currentPage}/{totalPages}";
         }
 
+        //Poprzednia strona konwersacji
         private void PrevPage_Click(object sender, RoutedEventArgs e)
         {
             if (currentPage > 1)
@@ -57,6 +62,7 @@ namespace PolMedUMG.View
             }
         }
 
+        //Kolejna strona konwersacji
         private void NextPage_Click(object sender, RoutedEventArgs e)
         {
             if (currentPage < totalPages)
@@ -65,6 +71,8 @@ namespace PolMedUMG.View
                 LoadCurrentPage();
             }
         }
+
+        //Pobranie czasu ostatniego zalogowania użytkownika z których pisze pacjent
         public DateTime GetLastLogin(string receiver)
         {
             using (MySqlConnection conn = new MySqlConnection(SessionManager.connStrSQL))
@@ -72,30 +80,11 @@ namespace PolMedUMG.View
                 try
                 {
                     conn.Open();
-
-                    // Krok 1: Pobierz username (login) na podstawie receivera
-                    string getUsernameSql = @"SELECT uid FROM users WHERE CONCAT('dr. ', firstName, ' ', secondName) = @receiver LIMIT 1";
-
-                    string username = null;
-
-                    using (MySqlCommand cmd = new MySqlCommand(getUsernameSql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@receiver", receiver);
-                        object result = cmd.ExecuteScalar();
-                        if (result != null)
-                            username = result.ToString();
-                    }
-
-                    // Jeśli nie znaleziono loginu – wyjście
-                    if (string.IsNullOrEmpty(username))
-                        return DateTime.Now;
-
-                    // Krok 2: Pobierz datę ostatniego logowania dla znalezionego username
                     string getLoginSql = "SELECT last_login FROM users WHERE uid = @username LIMIT 1";
 
                     using (MySqlCommand cmd = new MySqlCommand(getLoginSql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@username", receiver);
                         object result = cmd.ExecuteScalar();
 
                         if (result != null && DateTime.TryParse(result.ToString(), out DateTime lastLogin))
@@ -110,26 +99,58 @@ namespace PolMedUMG.View
 
             return DateTime.Now;
         }
+
+        //Otwarcie nowego okna konwersacji
         private void ConversationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ConversationList.SelectedItem is ConvMessages selectedConversation)
             {
-                var Conv = new MessagesOpenConv(
-                    GetLastLogin(selectedConversation.Sender),
-                    selectedConversation.Sender,
-                    selectedConversation.DoctorImage,
-                    selectedConversation
-                );
-                var parentWindow = Window.GetWindow(this) as PatientScreen;
+                if (selectedConversation.ReceiverAccType == Convert.ToByte("1"))
+                {
+                    var Conv = new MessagesOpenConv(
+                        GetLastLogin(selectedConversation.Receiver),
+                        selectedConversation.Receiver,
+                        selectedConversation.DoctorImage,
+                        selectedConversation
+                    );
 
-                if (parentWindow != null)
-                {
-                    parentWindow.LoadContent(Conv);
+
+                    var parentWindow = Window.GetWindow(this) as PatientScreen;
+
+                    if (parentWindow != null)
+                    {
+                        parentWindow.LoadContent(Conv);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Nie udało się znaleźć nadrzędnego okna.");
+                    }
                 }
-                else
+                else 
                 {
-                    System.Diagnostics.Debug.WriteLine("Nie udało się znaleźć nadrzędnego okna.");
+                    var Conv = new MessagesOpenConv(
+                        GetLastLogin(selectedConversation.Sender),
+                        selectedConversation.Sender,
+                        selectedConversation.DoctorImage,
+                        selectedConversation
+                    );
+
+                    var parentWindow = Window.GetWindow(this) as PatientScreen;
+
+                    if (parentWindow != null)
+                    {
+                        parentWindow.LoadContent(Conv);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Nie udało się znaleźć nadrzędnego okna.");
+                    }
+
                 }
+
+                    
+
+                
             }
         }
         public void LoadContent(UserControl control)
@@ -142,6 +163,8 @@ namespace PolMedUMG.View
             }
         }
     }
+
+    //Konwerter zmieniające ikone odczytania wiadomości
     public class StatusToIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -165,6 +188,38 @@ namespace PolMedUMG.View
         {
             throw new NotImplementedException();
         }
+
+
+
+        
     }
+
+    //Konwerter zmieniające nazwy osób z którymi piszemi ukazujące się w liści konwersacji
+    public class CounterpartNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ConvMessages message)
+            {
+                bool isDoctor = SessionManager.accType == 1;
+
+                // For doctor view: show patient name
+                if (isDoctor)
+                    return message.SenderAccType == 0 ? message.Sender : message.Receiver;
+
+                // For patient view: show doctor name
+                return message.SenderAccType == 1 ? message.Sender : message.Receiver;
+            }
+            return string.Empty;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
 }
 

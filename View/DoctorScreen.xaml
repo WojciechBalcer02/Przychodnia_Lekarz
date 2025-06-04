@@ -194,8 +194,8 @@ Click="btnMinimize_Close">
         <!-- RIGHT CONTENT AREA -->
         <DockPanel 
             x:Name="RightContentPanel"
-            Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <view:dMainView DockPanel.Dock="Bottom"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            Grid.Row="1" Grid.Column="1" >
+            <view:dMainView/>
         </DockPanel>
 
 

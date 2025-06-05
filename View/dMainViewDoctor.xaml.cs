@@ -22,7 +22,7 @@ namespace PolMedUMG.View
 
        
 
-        public dMainViewDoctor(Doctor doktor) 
+        public dMainViewDoctor(dDoctor doktor) 
         {
             InitializeComponent();
             DoctorNameText.Text = "Imie: "+doktor.FirstName;

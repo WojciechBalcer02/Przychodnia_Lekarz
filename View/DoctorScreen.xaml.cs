@@ -51,7 +51,7 @@ namespace PolMedUMG.View
                         LoadContent(new dPricing());
                         break;
                     case "Wiadomości":
-                        LoadContent(new dMessages());
+                        LoadContent(new DoctorMessages());
                         break;
                     case "Ustawienia konta":
                         LoadContent(new dSettings());

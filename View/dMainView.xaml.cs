@@ -21,7 +21,7 @@ namespace PolMedUMG.View
     /// </summary>
     /// 
 
-    public class Doctor
+    public class dDoctor
     {
 
         public string FirstName;
@@ -33,7 +33,7 @@ namespace PolMedUMG.View
 
 
 
-        public Doctor(string firstname, string lastname, string email,string room, string phone)
+        public dDoctor(string firstname, string lastname, string email,string room, string phone)
         {
             FirstName = firstname;
             LastName = lastname;
@@ -75,13 +75,13 @@ namespace PolMedUMG.View
         }
         private void txtPatientSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (txtPatientSearch.Text != "") { LblPeselPlaceholder.Visibility = Visibility.Hidden; }
-            else { LblPeselPlaceholder.Visibility = Visibility.Visible; }
+            if (txtPatientSearch.Text != "") { LblPesel.Visibility = Visibility.Hidden; }
+            else { LblPesel.Visibility = Visibility.Visible; }
         }
         private void txtDoctorSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (txtDoctorSearch.Text != "") { LblIdPlaceholder.Visibility = Visibility.Hidden; }
-            else { LblIdPlaceholder.Visibility = Visibility.Visible; }
+            if (txtDoctorSearch.Text != "") { LblDoctorId.Visibility = Visibility.Hidden; }
+            else { LblDoctorId.Visibility = Visibility.Visible; }
         }  
         
 

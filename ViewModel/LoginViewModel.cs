@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using MySqlX.XDevAPI;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace PolMedUMG.ViewModel
 {
@@ -17,6 +18,9 @@ namespace PolMedUMG.ViewModel
     {
         private string _username;
         private string _password;
+
+
+        private LoginPrompt _view;
 
         public string Username
         {
@@ -30,17 +34,28 @@ namespace PolMedUMG.ViewModel
             set { _password = value; OnPropertyChanged(); }
         }
 
+        private string _errorMessage;
+
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel()
+        public LoginViewModel(LoginPrompt view)
         {
             LoginCommand = new RelayCommand(Login);
+            _view = view;
         }
 
         private void Login()
         {
-            // Przechowuje informacj� dotycz�ce po��czenia z baz� danych
-            SessionManager.connStrSQL = "server=mysql-2e56cd6f-krzychu1324533-54ee.i.aivencloud.com;port=22051;uid=avnadmin;pwd=AVNS_OVYnYntZX_NGb7O_HZJ;database=defaultdb";
 
             //      ich baza                 "server=bb97fob4mmaybcvttjjk-mysql.services.clever-cloud.com;uid=uirqsom4re7q6gwn;pwd=ODh2O0u6eNj3uUkXsLYO;database=bb97fob4mmaybcvttjjk"
             //      nasza baza               "server=server=mysql-2e56cd6f-krzychu1324533-54ee.i.aivencloud.com;port=22051;uid=avnadmin;pwd=AVNS_OVYnYntZX_NGb7O_HZJ;database=defaultdb"
@@ -56,64 +71,132 @@ namespace PolMedUMG.ViewModel
                 query.Connection = conn;
                 query.CommandText = @"SELECT COUNT(*) FROM users WHERE uid = @uid;";
                 query.Parameters.AddWithValue("@uid", _username);
-                int userCount = (int)(long)query.ExecuteScalar();
+                int userCount = (int)(long)query.ExecuteScalar();     
                 conn.Close();
-
-                conn.Open();//Zapytanie do bazy o hash oraz salt danego użytkownika
-                MySqlCommand hashcheck = new MySqlCommand();
-                hashcheck.Connection = conn;
-                hashcheck.CommandText = @"SELECT pwdHash,pwdSalt FROM users WHERE uid = @uid;";
-                hashcheck.Parameters.AddWithValue("@uid", _username);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(hashcheck);
-                DataTable dataTable = new DataTable();
-                adapter.Fill(dataTable);
-                conn.Close();
-                if (userCount > 0 && HashFunction.VerifyPassword(_password, dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<byte[]>(1)))
+                if (userCount > 0)
                 {
-                    // Istnieje dany użytkownik i hasło zgadza się z tym w bazie
+                    // Istnieje dany użytkownik
                     try
                     {
                         conn.Open();
+                        //Zapytanie do bazy o hash oraz salt danego użytkownika
+                        MySqlCommand hashcheck = new MySqlCommand();
+                        hashcheck.Connection = conn;
+                        hashcheck.CommandText = @"SELECT pwdHash,pwdSalt FROM users WHERE uid = @uid;";
+                        hashcheck.Parameters.AddWithValue("@uid", _username);
+                        MySqlDataAdapter adapter = new MySqlDataAdapter(hashcheck);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        Boolean hashCheckPassed = HashFunction.VerifyPassword(_password, dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<byte[]>(1));
+
                         // Sprawdzamy jakiego typu jest u�ytkownik
                         MySqlCommand query2 = new MySqlCommand();
                         query2.Connection = conn;
                         query2.CommandText = @"SELECT acc_type FROM users WHERE uid = @uid;";
                         query2.Parameters.AddWithValue("@uid", _username);
-                        String acctype = query2.ExecuteScalar().ToString();
+                        string acctype = query2.ExecuteScalar().ToString();
 
-                        SessionManager.accType = acctype;
+                        SessionManager.accType = Convert.ToByte(acctype);
 
-                        // wyslanie do bazy daty logowania
-                        MySqlCommand updateLoginTime = new MySqlCommand();
-                        updateLoginTime.Connection = conn;
-                        updateLoginTime.CommandText = @"UPDATE users SET last_login = @loginTime WHERE uid = @uid;";
-                        updateLoginTime.Parameters.AddWithValue("@loginTime", DateTime.Now);
-                        updateLoginTime.Parameters.AddWithValue("@uid", _username);
-                        updateLoginTime.ExecuteNonQuery();
+                        MySqlCommand recpass = new MySqlCommand();
+                        recpass.Connection = conn;
+                        recpass.CommandText = @"SELECT newPass, dateOfGeneration FROM PassRecovery WHERE username = @username ORDER BY dateOfGeneration DESC LIMIT 1;";
+                        recpass.Parameters.AddWithValue("@username", _username);
+                        string recoveryPassword = null;
+                        DateTime dateOfGeneration = DateTime.MinValue;
 
-                        conn.Close();
-                        // W zale�no�ci od typu u�ytkownika otwieramy odpowiednie okno
-                        if (acctype.Equals("2"))
+                        using (var reader = recpass.ExecuteReader())
                         {
-                            AdminScreen adminWindow = new AdminScreen();
-                            adminWindow.Show();
-                            Application.Current.MainWindow.Close();
+                            if (reader.Read())
+                            {
+                                recoveryPassword = reader["newPass"].ToString();
+                                dateOfGeneration = Convert.ToDateTime(reader["dateOfGeneration"]);
+
+                            }
+                            else
+                            {
+                                recoveryPassword = null;
+                                dateOfGeneration = DateTime.MinValue;
+                            }
                         }
-                        else if (acctype.Equals("1"))
+                        TimeSpan timeSinceGeneration = DateTime.Now - dateOfGeneration;
+                        if (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15)
                         {
-                            DoctorScreen doctorWindow = new DoctorScreen();
-                            doctorWindow.Show();
-                            Application.Current.MainWindow.Close();
+                            Debug.WriteLine("działa fantastycznie");
                         }
-                        else if (acctype.Equals("0"))
+
+                        if (hashCheckPassed == true || (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15))
                         {
-                            PatientScreen patientWindow = new PatientScreen();
-                            patientWindow.Show();
-                            Application.Current.MainWindow.Close();
-                        }
-                        
+
+                            // wyslanie do bazy daty logowania
+                            MySqlCommand updateLoginTime = new MySqlCommand();
+                            updateLoginTime.Connection = conn;
+                            updateLoginTime.CommandText = @"UPDATE users SET last_login = @loginTime WHERE uid = @uid;";
+                            updateLoginTime.Parameters.AddWithValue("@loginTime", DateTime.Now);
+                            updateLoginTime.Parameters.AddWithValue("@uid", _username);
+                            updateLoginTime.ExecuteNonQuery();
+
+                            if (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15)
+                            {
+                                MySqlCommand deleteRecoveryPasswords = new MySqlCommand();
+                                deleteRecoveryPasswords.Connection = conn;
+                                deleteRecoveryPasswords.CommandText = @"DELETE FROM PassRecovery WHERE username = @uid;";
+                                deleteRecoveryPasswords.Parameters.AddWithValue("@uid", _username);
+                                deleteRecoveryPasswords.ExecuteNonQuery();
+
+                                MySqlCommand updatePassword = new MySqlCommand();
+                                updatePassword.Connection = conn;
+                                updatePassword.CommandText = @"UPDATE users SET pwdHash = @Hash, pwdSalt = @salt WHERE uid = @uid;";
+                                byte[] recoveryHash = HashFunction.GenerateSalt();
+                                updatePassword.Parameters.AddWithValue("@Hash", HashFunction.HashPassword(_password, recoveryHash));
+                                updatePassword.Parameters.AddWithValue("@salt", recoveryHash);
+                                updatePassword.Parameters.AddWithValue("@uid", _username);
+                                updatePassword.ExecuteNonQuery();
+
+                                MessageBox.Show("Twoje domyślne hasło zostało zmienione!");
+                            }
+
+                            // W zale�no�ci od typu u�ytkownika otwieramy odpowiednie okno
+                            if (acctype.Equals("2"))
+                            {
+                                AdminScreen adminWindow = new AdminScreen();
+                                adminWindow.Show();
+                                Application.Current.MainWindow.Close();
+                            }
+                            else if (acctype.Equals("1"))
+                            {
+                                DoctorScreen doctorWindow = new DoctorScreen();
+                                doctorWindow.Show();
+                                Application.Current.MainWindow.Close();
+                            }
+                            else if (acctype.Equals("0"))
+                            {
+                                PatientScreen patientWindow = new PatientScreen();
+                                patientWindow.Show();
+                                Application.Current.MainWindow.Close();
+                            }
 
 
+
+                        }
+
+                        else 
+                        {
+                            if (hashCheckPassed==false)
+                            {
+                                ErrorMessage = "Podano złe hasło.";
+                            }
+                            if (_password == recoveryPassword && timeSinceGeneration.TotalMinutes > 15) // przedawnione haslo
+                            {
+                                ErrorMessage = "Hasło przywracające uległo przedawnieniu";
+                                MySqlCommand deleteRecoveryPasswords = new MySqlCommand();
+                                deleteRecoveryPasswords.Connection = conn;
+                                deleteRecoveryPasswords.CommandText = @"DELETE FROM PassRecovery WHERE username = @uid;";
+                                deleteRecoveryPasswords.Parameters.AddWithValue("@uid", _username);
+                                deleteRecoveryPasswords.ExecuteNonQuery();
+                            }
+
+                        }
                     }
                     catch (MySql.Data.MySqlClient.MySqlException ex)
                     {

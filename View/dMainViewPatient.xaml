@@ -9,14 +9,79 @@
         WindowStyle="None"
         Background="Transparent"
         ResizeMode="NoResize"
-        Title="Informacje pacjenta"  Width="800" Height="600" WindowStartupLocation="CenterScreen">
-    <Border Width="700"
-        Height="500"
+        MouseDown="Window_MouseDown"
+        
+        Title="Informacje pacjenta"  Width="800" Height="500" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="CornflowerBlue"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="DeepSkyBlue"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="RoundedButton" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+
+            <Setter Property="Content" Value="Szukaj"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" CornerRadius="8" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+
+    <Border Width="750"
+        Height="475"
         Background="White"
         CornerRadius="20"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        Padding="30">
+        Padding="30,10,30,10">
         <Border.Effect>
             <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="5"/>
         </Border.Effect>
@@ -53,12 +118,34 @@
 
             <!-- Info -->
             <Grid Height="350" Width="auto" Margin="5,70,5,10">
-                <Image HorizontalAlignment="Left" Height="100" Margin="10,5,0,0" VerticalAlignment="Top" Width="100" Source="/Images/Icons/profile.jpg"/>
-                <TextBlock  FontSize="15" x:Name="PatientNameText" HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="10,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="10,180,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="10,210,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="10,240,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="110" Margin="15,10,0,0" VerticalAlignment="Top" Width="110" Source="/Images/Icons/profile.jpg"/>
+                <TextBlock  FontSize="15" x:Name="PatientNameText" HorizontalAlignment="Left" Margin="15,130,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="15,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="15,190,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="15,220,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="15,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="15" x:Name="PatientPeselText" HorizontalAlignment="Left" Margin="15,280,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                
+                <Button x:Name="btnPatientViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="Button_Click" Width="170" Height="45">
+                    <TextBlock  FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyślij wiadomość" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
+                </Button>
+
+                <Button  x:Name="btnPatientViewVisits" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top"  Width="150" Height="45">
+                    <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Umów wizyty" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
+                </Button>
+
+                <Button x:Name="btnPatientViewResults" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,70,0,0" VerticalAlignment="Top"   Width="180" Height="45">
+                    <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyświetl wyniki badań" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
+                </Button>
+
+                <Button x:Name="btnPatientViewReceipt" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="400,70,0,0" VerticalAlignment="Top"   Width="140" Height="45">
+                    <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wystaw receptę" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
+                </Button>
+
+
+
+
+
             </Grid>
         </Grid>
     </Border>

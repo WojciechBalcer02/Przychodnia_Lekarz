@@ -142,7 +142,7 @@ namespace PolMedUMG.ViewModel
                     {
                         //Zapytanie do bazy pobierające dane pacjenta
                         conn.Open();
-                        string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.PESEL = @pesel";
+                        string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address,users.uid,users.last_login,patients.PESEL FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.PESEL = @pesel";
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
@@ -151,7 +151,7 @@ namespace PolMedUMG.ViewModel
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
+                        Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4), dataTable.Rows[0].Field<string>(5), dataTable.Rows[0].Field<string>(6), dataTable.Rows[0].Field<string>(7));
                         conn.Close();
 
                         //Stworzenie nowego okienka inforamycjnego z danymi pacjenta
@@ -168,7 +168,7 @@ namespace PolMedUMG.ViewModel
                 {
                     //Zapytanie do bazy pobierające dane pacjenta
                     conn.Open();
-                    string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.uid = @uid";
+                    string sql = @"SELECT users.firstName,users.secondName,users.mail,patients.phoneNumber,patients.address,users.uid,users.last_login,patients.PESEL FROM patients INNER JOIN users ON patients.uid = users.uid WHERE patients.uid = @uid";
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
@@ -177,7 +177,7 @@ namespace PolMedUMG.ViewModel
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
-                    Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
+                    Patient pat = new Patient(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4), dataTable.Rows[0].Field<string>(5), dataTable.Rows[0].Field<string>(6), dataTable.Rows[0].Field<string>(7));
                     conn.Close();
 
                     //Stworzenie nowego okienka inforamycjnego z danymi pacjenta

@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              mc:Ignorable="av" x:Class="PolMedUMG.View.dMainView"
              Height="auto"
-             Width="1000">
+             Width="auto">
     <UserControl.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -67,35 +67,37 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20,20,20,20" ForceCursor="True">
+    <Grid Margin="20,0,20,20" ForceCursor="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="150"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock  Height="40" Margin="24,-20,0,0" FontSize="26" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Width="192" Grid.Column="1" Language="en-150" Text="Strona główna"/>
+        <TextBlock HorizontalAlignment="Center" Height="40" Margin="24,5,0,0" FontSize="26" FontWeight="Bold"  TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Grid.Column="1" Language="en-150" Text="Strona główna"/>
         <!--Patient-->
-        <TextBlock HorizontalAlignment="Left" FontSize="20" Height="28" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="10,50,0,0" Language="en-150" Text="Wyszukaj pacjenta" />
-        <Label x:Name="LblPesel" Foreground="LightSlateGray" HorizontalAlignment="Left" Language="en-150" Height="26" IsHitTestVisible="False" Margin="10,92,0,0" FontSize="14" Grid.Row="1"  VerticalAlignment="Top" Width="176" Panel.ZIndex="1">
+        <TextBlock HorizontalAlignment="Center" FontSize="24" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="350" Margin="0,40,20,0" Language="en-150" Text="Wyszukaj pacjenta" />
+        <Label x:Name="LblPesel" Foreground="LightSlateGray" HorizontalAlignment="Center" Language="en-150" Height="28" IsHitTestVisible="False" Margin="-80,92,0,0" FontSize="16" Grid.Row="1"  Grid.Column="1" VerticalAlignment="Top" Width="240" Panel.ZIndex="1">
             <TextBlock Text="PESEL lub UID"/>
         </Label>
-            <TextBox  x:Name="txtPatientSearch" TextChanged="txtPatientSearch_TextChanged" HorizontalAlignment="Left" Height="21" Margin="10,97,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding PatientPesel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="180" />
-        <Button Style="{DynamicResource RoundedButton}" Command="{Binding PatientLookup}"  x:Name="BtnPatientSearch"  BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="205,97,0,0" Grid.Row="1" VerticalAlignment="Top" Width="70" />
+        <TextBox  x:Name="txtPatientSearch" TextChanged="txtPatientSearch_TextChanged" FontSize="22" HorizontalAlignment="Center" Height="32" Margin="-80,92,0,0"  Grid.Column="1" Grid.Row="1" Text="{Binding PatientPesel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="240" />
+        <Button Style="{DynamicResource RoundedButton}" Command="{Binding PatientLookup}"  x:Name="BtnPatientSearch"  BorderBrush="Transparent"  Grid.Column="1" HorizontalAlignment="Center" Height="32" Margin="370,92,50,0" Grid.Row="1" VerticalAlignment="Top" Width="90" />
         <!--/Patient-->
-        
+
         <!--Doctor-->
-            <TextBlock HorizontalAlignment="Left" FontSize="20" Height="27" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Margin="10,27,0,0" Text="Wyszukaj lekarza"/>
-        <Label x:Name="LblDoctorId"  Foreground="LightSlateGray" HorizontalAlignment="Left" Height="26" IsHitTestVisible="False" Margin="10,68,0,0" FontSize="14" Grid.Row="2"  VerticalAlignment="Top" Width="176" Language="en-150" Panel.ZIndex="1">
+        <TextBlock HorizontalAlignment="Center" FontSize="24"  Grid.Column="1" TextAlignment="Center" Grid.Row="2" VerticalAlignment="Top" Width="350" Margin="0,40,20,0" Text="Wyszukaj lekarza"/>
+        <Label x:Name="LblDoctorId"  Foreground="LightSlateGray" HorizontalAlignment="Center" Height="28"  Grid.Column="1" IsHitTestVisible="False" Margin="-80,92,0,0" FontSize="16" Grid.Row="2"  VerticalAlignment="Top" Width="240" Language="en-150" Panel.ZIndex="1">
             <TextBlock Text="UID"/>
         </Label>
-        <TextBox  x:Name="txtDoctorSearch" Text="{Binding DoctorUsername, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtDoctorSearch_TextChanged" HorizontalAlignment="Left" Height="20" Margin="10,74,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" />
-            <Button x:Name="BtnDoctorSearch"  Command="{Binding DoctorLookup}"  BorderBrush="Transparent"  HorizontalAlignment="Left" Height="19" Margin="205,74,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" Style="{DynamicResource RoundedButton}"/>
+        <TextBox  x:Name="txtDoctorSearch" FontSize="22"  Text="{Binding DoctorUsername, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="1" TextChanged="txtDoctorSearch_TextChanged" HorizontalAlignment="Center" Height="32" Margin="-80,92,0,20" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="240" />
+        <Button x:Name="BtnDoctorSearch"  Command="{Binding DoctorLookup}"  BorderBrush="Transparent"  Grid.Column="1" HorizontalAlignment="Center" Height="32" Margin="370,92,50,0" Grid.Row="2" VerticalAlignment="Top" Width="90" Style="{DynamicResource RoundedButton}"/>
         <!--/Doctor-->
+
 
     </Grid>
 

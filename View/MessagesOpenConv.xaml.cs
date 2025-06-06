@@ -63,7 +63,7 @@ namespace PolMedUMG.View
                 }
             }
         }
-        //Obsługa przycisku powrotu do głównego ekranu wiadomości
+        //Obsługa przycisku powrotu do głównego ekranu wiadomości  
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             if (MainArea != null)

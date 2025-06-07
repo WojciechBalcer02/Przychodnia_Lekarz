@@ -21,8 +21,6 @@ namespace PolMedUMG.View
         public string DoctorImage { get; set; }//Obraz lekarza, ogólnie obraz narazie nic nie bedzie robi
         public string Status { get; set; }//Status odczytania wiadomości
 
-        public string StatusSender { get; set; }
-
         //Konstruktor tworzący obiek wiadomości
         public ConvMessages(string sender,string receiver, DateTime date, string content, string status, string doctorImage)
         {
@@ -31,9 +29,7 @@ namespace PolMedUMG.View
             Date = date;
             Content = content;
             Status = status;
-            DoctorImage = doctorImage;
-            StatusSender = "Odczytane";
-            
+            DoctorImage = doctorImage;        
         } 
         
     }

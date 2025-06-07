@@ -1,4 +1,4 @@
-﻿<Window x:Class="PolMedUMG.View.dMainViewPatientConv"      
+﻿<Window x:Class="PolMedUMG.View.dMainViewDoctorConv"      
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -88,7 +88,7 @@
                                     <ImageBrush Stretch="Fill" ImageSource="/Images/Icons/profile.jpg"/>
                                 </Border.Background>
                             </Border>
-                            <TextBlock Text="{Binding patientName}" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="5"/>
+                            <TextBlock Text="{Binding doctorName}" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="5"/>
                             <TextBlock Text="{Binding FormattedLoginDate}" FontSize="15" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="15,0,10,0"/>
                         </DockPanel>
                     </Border>
@@ -120,7 +120,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox Keyboard.KeyDown="MessageInput_KeyUp" x:Name="MessageInput" BorderThickness="0" Background="Transparent" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,10,0" Height="50" Width="Auto" DockPanel.Dock="Left" 
                     VerticalContentAlignment="Center" FontSize="18"/>
-                                    <Button Content="wyślij" Click="Send_Click" Grid.Column="1" Foreground="White" Height="50" Width="80" FontSize="17" HorizontalAlignment="Right">
+                                    <Button Content="wyślij" Click="Send_Click1" Grid.Column="1" Foreground="White" Height="50" Width="80" FontSize="17" HorizontalAlignment="Right">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Setter Property="Background" Value="#5C84E2"/>

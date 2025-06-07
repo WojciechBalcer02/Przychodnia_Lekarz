@@ -1,37 +1,51 @@
-using System.Globalization;
+﻿using MySql.Data.MySqlClient;
+using PolMedUMG.Model;
+using PolMedUMG.ViewModel;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
-using MySql.Data.MySqlClient;
-
-
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 namespace PolMedUMG.View
 {
-    public partial class DoctorMessagesOpenConv : UserControl
+    public partial class dMainViewDoctorConv : Window
     {
+        private dDoctor currentDoctor;
         public List<ConvMessages> Messages { get; set; }
         public DateTime date { get; }
-        public string patientName { get; }
-        public string doctorImage { get; }
+        public string doctorName { get; }
         public ConvMessages conversation { get; set; }
-        public DoctorMessagesOpenConv(DateTime date, string patientName, string doctorImage, ConvMessages conversation)
+
+
+        public dMainViewDoctorConv(dDoctor doctor)
         {
-
             InitializeComponent();
-
+            this.currentDoctor = doctor;
+            this.doctorName = currentDoctor.FirstName+" "+ currentDoctor.LastName;
+            if (currentDoctor == null) return;
             var repo = new MessageRepository();
             //Pobranie wiadomości dotyczących naszego lekarza
-            Messages = repo.GetMessagesFrom(SessionManager.CurrentUsername, patientName);
+            this.Messages = repo.GetMessagesFrom(SessionManager.CurrentUsername, currentDoctor.uid);
             repo.markAsReaded(SessionManager.CurrentUsername);
-
-            this.date = date;
-            this.patientName = patientName;
-            this.doctorImage = doctorImage;
-            this.conversation = conversation;
-
+            this.date = DateTime.Now;
+            this.date = currentDoctor.last_login;
             this.DataContext = this;
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+            
         public string FormattedLoginDate
         {
             get
@@ -63,22 +77,12 @@ namespace PolMedUMG.View
             }
         }
 
-        //Obsługa przycisku powrotu do głównego ekranu wiadomości
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            if (MainArea != null)
-            {
-                MainArea.Children.Clear();
-                MainArea.Children.Add(new DoctorMessages());
-            }
-        }
-
         //Obsługa przycisku wysłanie wiadomości do pacjenta
-        private void Send_Click(object sender, RoutedEventArgs e)
+        private void Send_Click1(object sender, RoutedEventArgs e)
         {
             string messageText = MessageInput.Text;
             string senderr = SessionManager.CurrentUsername;
-            string receiver = patientName;
+            string receiver = currentDoctor.uid;
             DateTime data = DateTime.Now;
             string dataAsString = data.ToString();
 
@@ -100,6 +104,7 @@ namespace PolMedUMG.View
 
                         string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage) 
                         VALUES (@sender, @receiver, @date, @content, @status, @doctorImage);";
+
 
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
@@ -125,11 +130,14 @@ namespace PolMedUMG.View
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                Send_Click(sender, e);
+                Send_Click1(sender, e);
             }
         }
 
-
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
     }
-   
 }

@@ -125,7 +125,7 @@ namespace PolMedUMG.ViewModel
                             Debug.WriteLine("działa fantastycznie");
                         }
 
-                        if (hashCheckPassed == true || (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15))
+                        if ((hashCheckPassed == true) || (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15))
                         {
 
                             // wyslanie do bazy daty logowania

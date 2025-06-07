@@ -24,14 +24,19 @@ namespace PolMedUMG.View
         public string roomNumber;
         public string phoneNumber;
         public string specialization;
+        public string uid;
+        public DateTime last_login;
 
-        public dDoctor(string firstname, string lastname, string email,string room, string phone)
+        public dDoctor(string firstname, string lastname, string email,string room, string phone,string spec,string ui,string last)
         {
             FirstName = firstname;
             LastName = lastname;
             Email = email;
             roomNumber = room;
             phoneNumber = phone;
+            specialization = spec;
+            last_login = Convert.ToDateTime(last);
+            uid = ui;
         }
     }
 

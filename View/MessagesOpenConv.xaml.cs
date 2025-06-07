@@ -24,7 +24,7 @@ namespace PolMedUMG.View
             //Pobranie wiadomości dotyczących naszego pacjenta
             Messages = repo.GetMessagesFrom(doctorName,SessionManager.CurrentUsername);
 
-            repo.markAsReaded(doctorName);
+            repo.markAsReaded(SessionManager.CurrentUsername);
 
             this.date = date;
             this.doctorName = doctorName;
@@ -80,12 +80,9 @@ namespace PolMedUMG.View
             string receiver = doctorName;
             DateTime data = DateTime.Now;
             string dataAsString = data.ToString();
-            byte receivertype = 1;
-            byte sendertype = 0;
-
             if (!string.IsNullOrWhiteSpace(messageText))
             {
-                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText,"nowa wiadomość", "dummy", "Odczytane",receivertype,sendertype);
+                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText,"nowa wiadomość", "dummy");
 
                 Messages.Add(newMsg);
 
@@ -99,8 +96,8 @@ namespace PolMedUMG.View
                     {
                         conn.Open();
                         //Wrzucenie wiadomości do bazy danych
-                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage, statusPatient, sender_acctype,receiver_acctype) 
-                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage, @statusPatient,@sendertype, @receivertype);";
+                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage) 
+                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage);";
 
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                         {
@@ -110,10 +107,6 @@ namespace PolMedUMG.View
                             cmd.Parameters.AddWithValue("@content", messageText);
                             cmd.Parameters.AddWithValue("@status", "nowa wiadomość");
                             cmd.Parameters.AddWithValue("@doctorImage", "dummy");
-                            cmd.Parameters.AddWithValue("@statusPatient", "Odczytane");
-                            cmd.Parameters.AddWithValue("@sendertype", sendertype);
-                            cmd.Parameters.AddWithValue("@receivertype", receivertype);
-
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -158,7 +151,7 @@ namespace PolMedUMG.View
         {
             bool IsSender = MessagesOpenConv.compare(value);
 
-            return IsSender ? Brushes.LightGray : (Brush)new BrushConverter().ConvertFromString("#5C84E2");
+            return IsSender ? (Brush)new BrushConverter().ConvertFromString("#5C84E2") : Brushes.LightGray;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -188,7 +181,7 @@ namespace PolMedUMG.View
         {
             bool IsSender = MessagesOpenConv.compare(value);
 
-            return IsSender ? Brushes.Black : Brushes.White;
+            return IsSender ? Brushes.White : Brushes.Black;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

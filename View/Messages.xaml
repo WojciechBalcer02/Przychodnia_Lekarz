@@ -87,9 +87,9 @@
                             </StackPanel>
 
                             <!-- Status z ikonka -->
-                            <TextBlock Grid.Column="3" Text="{Binding StatusPatient}" VerticalAlignment="Center" Margin="10,0" TextAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Grid.Column="3" Text="{Binding Status}" VerticalAlignment="Center" Margin="10,0" TextAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
                             <StackPanel Grid.Column="4">
-                                <fa:ImageAwesome Grid.Column="4" Icon="{Binding StatusPatient, Converter={StaticResource StatusToIconConverter}}" Margin="12"  Width="30" Height="30"/>
+                                <fa:ImageAwesome Grid.Column="4" Icon="{Binding Status, Converter={StaticResource StatusToIconConverter}}" Margin="12"  Width="30" Height="30"/>
                             </StackPanel>
 
                         </Grid>

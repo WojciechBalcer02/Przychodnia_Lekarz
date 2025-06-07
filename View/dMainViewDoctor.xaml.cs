@@ -20,18 +20,32 @@ namespace PolMedUMG.View
     public partial class dMainViewDoctor : Window
     {
 
-       
+        private dDoctor currentDoctor;
 
         public dMainViewDoctor(dDoctor doktor) 
         {
             InitializeComponent();
+            currentDoctor = doktor;
             DoctorNameText.Text = "Imie: "+doktor.FirstName;
             DoctorSurnameText.Text = "Nazwisko: "+doktor.LastName;
             DoctorEmailText.Text = "Email: "+doktor.Email;
             DoctorRoomNumberText.Text = "Numer gabientu: "+doktor.roomNumber;
             DoctorPhoneNumberText.Text = "Numer telefonu: "+doktor.phoneNumber;
+            DoctorSpecializationText.Text = "Specjalizacja: "+doktor.specialization;
         }
-        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentDoctor == null) return;
+            else if ((currentDoctor != null) && (currentDoctor.uid != SessionManager.CurrentUsername))
+            {
+                dMainViewDoctorConv LookupDoctorConvWindow = new dMainViewDoctorConv(currentDoctor);
+                LookupDoctorConvWindow.Show();
+            }
+            else 
+            {
+                MessageBox.Show("Nie można rozpocząć rozmowy z samym sobą","Błąd");
+            }
+        }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {

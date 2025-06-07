@@ -15,27 +15,25 @@ namespace PolMedUMG.View
     public class ConvMessages
     {
         public string Sender { get; set; } //Nadawca
-        public byte SenderAccType { get; set; }//Typ konta nadawcy
         public string Receiver { get; set; }//Odbiorca
-        public byte ReceiverAccType { get; set; }//Typ konta odbciorcy
         public DateTime Date { get; set; }//Data wysłania
         public string Content { get; set; }//Zawartośc wiadomości
-        public string DoctorImage { get; set; }//Obraz lekarza/ ogólnie obraz narazie i pewnie na zawsze nic nie bedzie robic
-        public string StatusPatient { get; set;  }//Status odczytania wiadomości przez pacjenta
-        public string StatusDoctor { get; set; }//Status odczytania wiadomości przez lekarza
+        public string DoctorImage { get; set; }//Obraz lekarza, ogólnie obraz narazie nic nie bedzie robi
+        public string Status { get; set; }//Status odczytania wiadomości
+
+        public string StatusSender { get; set; }
 
         //Konstruktor tworzący obiek wiadomości
-        public ConvMessages(string sender,string receiver, DateTime date, string content, string statusDoctor, string doctorImage, string statusPatient, byte sendertype, byte receivertype)
+        public ConvMessages(string sender,string receiver, DateTime date, string content, string status, string doctorImage)
         {
             Sender = sender;
             Receiver = receiver;
             Date = date;
             Content = content;
-            StatusDoctor = statusDoctor;
+            Status = status;
             DoctorImage = doctorImage;
-            StatusPatient = statusPatient;
-            SenderAccType = sendertype;
-            ReceiverAccType = receivertype;
+            StatusSender = "Odczytane";
+            
         } 
         
     }
@@ -54,12 +52,8 @@ namespace PolMedUMG.View
                 {
                     conn.Open();
                     string sql = @"SELECT sender, receiver, date, content, 
-                                status, doctorImage, statusPatient,
-                                sender_acctype,
-                                receiver_acctype
+                                status, doctorImage
                                 FROM Conversations WHERE sender = @sender OR receiver = @receiver;";
-
-
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.CommandText = sql;
                     cmd.Parameters.AddWithValue("@sender", SessionManager.CurrentUsername);
@@ -75,10 +69,7 @@ namespace PolMedUMG.View
                                 Convert.ToDateTime(reader["date"]),
                                 reader["content"].ToString(),
                                 reader["status"].ToString(),
-                                reader["doctorImage"].ToString(),
-                                reader["statusPatient"].ToString(),
-                                Convert.ToByte(reader["sender_acctype"]),
-                                Convert.ToByte(reader["receiver_acctype"])
+                                reader["doctorImage"].ToString()
                             );
                             conversations.Add(msg);
                         }
@@ -97,15 +88,15 @@ namespace PolMedUMG.View
         }
 
         //Metoda zwraca wszystkie wiadomości miedzy dwoma użytkownikami
-        public List<ConvMessages> GetMessagesFrom(string doctorName, string patientName)
+        public List<ConvMessages> GetMessagesFrom(string sender, string receiver)
         {
             var ConvMessages = GetMessagesFromDB();
             var filteredMessages = new List<ConvMessages>();
 
             foreach (var msg in ConvMessages)
             {
-                if ((msg.Sender == patientName && msg.Receiver == doctorName) ||
-                    (msg.Sender == doctorName && msg.Receiver == patientName))
+                if ((msg.Sender == sender && msg.Receiver == receiver) ||
+                    (msg.Sender == receiver && msg.Receiver == sender))
                 {
                     filteredMessages.Add(msg);
                 }
@@ -114,36 +105,58 @@ namespace PolMedUMG.View
             return filteredMessages;
         }
 
-        //Metoda zwraca listę wszystkich unikalnych lekarzy z danej listy wiadomości
-        public List<ConvMessages> ListOfUniqueDoctors(string user)
+        public List<ConvMessages> ListOfUniqueRecepiants(string user)
         {
-            return GetMessagesFromDB()
-                .Where(m => (m.ReceiverAccType == 1 && m.Sender == user) || (m.SenderAccType == 1 && m.Receiver==user))
-                .GroupBy(m => m.SenderAccType == Convert.ToByte("1") ? m.Sender : m.Receiver)
-                .Select(g => g.Last())
+            var allMessages = GetMessagesFromDB()
+                .Where(m => m.Sender.Equals(SessionManager.CurrentUsername, StringComparison.OrdinalIgnoreCase) ||
+                            m.Receiver.Equals(SessionManager.CurrentUsername, StringComparison.OrdinalIgnoreCase))
                 .ToList();
-        }
-        //Metoda zwraca listę wszystkich unikalnych pacjentów z danej listy wiadomości
-        public List<ConvMessages> ListOfUniquePatients(string user)
-        {
-            return GetMessagesFromDB()
-                .Where(m => (m.ReceiverAccType == 0 && m.Sender == user) || (m.SenderAccType == 0 && m.Receiver == user))
-                .GroupBy(m => m.SenderAccType == Convert.ToByte("0") ? m.Sender : m.Receiver)
-                .Select(g => g.Last())
+
+            var uniqueConversations = allMessages
+                .Select(m => new
+                {
+                    Recipient = m.Sender.Equals(SessionManager.CurrentUsername, StringComparison.OrdinalIgnoreCase) ? m.Receiver : m.Sender,
+                    Message = m
+                })
+                .GroupBy(x => x.Recipient, StringComparer.OrdinalIgnoreCase)
+                .Select(g =>
+                {
+                    // Ostatnia wiadomość w konwersacji (do podglądu treści i daty)
+                    var lastMsgOverall = g.OrderByDescending(x => x.Message.Date).First().Message;
+
+                    // Ostatnia wiadomość OTRZYMANA przez użytkownika (do statusu)
+                    var lastReceivedMsg = g
+                        .Where(x => x.Message.Receiver.Equals(SessionManager.CurrentUsername, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(x => x.Message.Date)
+                        .FirstOrDefault()?.Message;
+
+                    // Jeżeli nie ma żadnej otrzymanej wiadomości, to Odczytane
+                    string statusToShow = lastReceivedMsg != null ? lastReceivedMsg.Status : "Odczytane";
+
+                    return new ConvMessages(
+                        sender: lastMsgOverall.Sender,
+                        receiver: lastMsgOverall.Receiver,
+                        date: lastMsgOverall.Date,
+                        content: lastMsgOverall.Content,
+                        status: statusToShow,
+                        doctorImage: lastMsgOverall.DoctorImage
+                    );
+                })
+                .OrderByDescending(m => m.Date)
                 .ToList();
+
+            return uniqueConversations;
         }
+
+
 
         //Funkcja oznaczająca wiadomość jako nie przeczytaną dla podanego użytkownika i przeczytaną dla zalogowanego użytkownika
         public void markAsReaded(string receiver)
         {
-            string statusField = SessionManager.accType == 1
-                ? "status" : "statusPatient";
-
+          
             string query = $@"UPDATE Conversations 
-                    SET {statusField} = 'Odczytane' 
-                    WHERE ((sender = @counterpart AND receiver = @user)
-                        OR (sender = @user AND receiver = @counterpart))
-                    AND {statusField} = 'nowa wiadomość'";
+                    SET status = 'Odczytane' 
+                    WHERE (receiver = @send);";
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(SessionManager.connStrSQL))
@@ -152,8 +165,7 @@ namespace PolMedUMG.View
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.CommandText = query;
-                        cmd.Parameters.AddWithValue("@counterpart", receiver);
-                        cmd.Parameters.AddWithValue("@user", SessionManager.CurrentUsername);
+                        cmd.Parameters.AddWithValue("@send", receiver);
                         cmd.ExecuteNonQuery();
                     }
                 }

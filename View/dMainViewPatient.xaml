@@ -119,12 +119,12 @@
             <!-- Info -->
             <Grid Height="350" Width="auto" Margin="5,70,5,10">
                 <Image HorizontalAlignment="Left" Height="110" Margin="15,10,0,0" VerticalAlignment="Top" Width="110" Source="/Images/Icons/profile.jpg"/>
-                <TextBlock  FontSize="15" x:Name="PatientNameText" HorizontalAlignment="Left" Margin="15,130,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="15,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="15,190,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="15,220,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="15,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                <TextBlock  FontSize="15" x:Name="PatientPeselText" HorizontalAlignment="Left" Margin="15,280,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientNameText" HorizontalAlignment="Left" Margin="15,130,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientSurnameText" HorizontalAlignment="Left" Margin="15,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientEmailText" HorizontalAlignment="Left" Margin="15,190,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientPhoneNumberText" HorizontalAlignment="Left" Margin="15,220,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="15,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+                <TextBlock  FontSize="16" x:Name="PatientPeselText" HorizontalAlignment="Left" Margin="15,280,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 
                 <Button x:Name="btnPatientViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="Button_Click" Width="170" Height="45">
                     <TextBlock  FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyślij wiadomość" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>

@@ -63,7 +63,7 @@ namespace PolMedUMG.ViewModel
                     {
                         //Zapytanie do bazy pobierające dane lekarza
                        conn.Open();
-                        string sql = "SELECT users.firstName,users.secondName,users.mail,doctors.roomNumber,doctors.phoneNumber FROM doctors INNER JOIN users ON doctors.uid = users.uid WHERE users.uid = @uid";
+                        string sql = "SELECT users.firstName,users.secondName,users.mail,doctors.roomNumber,doctors.phoneNumber,doctors.specialization,users.last_login FROM doctors INNER JOIN users ON doctors.uid = users.uid WHERE users.uid = @uid";
                         MySqlCommand cmd = new MySqlCommand();
                         cmd.Connection = conn;
                         cmd.CommandText = sql;
@@ -72,7 +72,7 @@ namespace PolMedUMG.ViewModel
                         MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);      
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        dDoctor dok = new dDoctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4));
+                        dDoctor dok = new dDoctor(dataTable.Rows[0].Field<string>(0), dataTable.Rows[0].Field<string>(1), dataTable.Rows[0].Field<string>(2), dataTable.Rows[0].Field<string>(3), dataTable.Rows[0].Field<string>(4), dataTable.Rows[0].Field<string>(5),_doctorusername, dataTable.Rows[0].Field<string>(6));
                         conn.Close();
 
                         //Stworzenie nowego okienka inforamycjnego z danymi lekarz

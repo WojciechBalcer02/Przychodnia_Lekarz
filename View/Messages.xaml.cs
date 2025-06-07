@@ -26,13 +26,10 @@ namespace PolMedUMG.View
         {
             
             InitializeComponent();
-
             var varii = new MessageRepository();
-            AllConversations = varii.ListOfUniqueDoctors(SessionManager.CurrentUsername).OrderByDescending(c => c.Date).ToList();
+            AllConversations = varii.ListOfUniqueRecepiants(SessionManager.CurrentUsername).OrderByDescending(c => c.Date).ToList();
             Conversations = new ObservableCollection<ConvMessages>();
-
             DataContext = this;
-
             LoadCurrentPage();
 
         }
@@ -105,7 +102,7 @@ namespace PolMedUMG.View
         {
             if (ConversationList.SelectedItem is ConvMessages selectedConversation)
             {
-                if (selectedConversation.ReceiverAccType == Convert.ToByte("1"))
+                if (selectedConversation.Receiver != SessionManager.CurrentUsername)
                 {
                     var Conv = new MessagesOpenConv(
                         GetLastLogin(selectedConversation.Receiver),
@@ -113,7 +110,6 @@ namespace PolMedUMG.View
                         selectedConversation.DoctorImage,
                         selectedConversation
                     );
-
 
                     var parentWindow = Window.GetWindow(this) as PatientScreen;
 
@@ -145,12 +141,7 @@ namespace PolMedUMG.View
                     {
                         System.Diagnostics.Debug.WriteLine("Nie udało się znaleźć nadrzędnego okna.");
                     }
-
                 }
-
-                    
-
-                
             }
         }
         public void LoadContent(UserControl control)
@@ -201,14 +192,15 @@ namespace PolMedUMG.View
         {
             if (value is ConvMessages message)
             {
-                bool isDoctor = SessionManager.accType == 1;
 
                 // For doctor view: show patient name
-                if (isDoctor)
-                    return message.SenderAccType == 0 ? message.Sender : message.Receiver;
-
-                // For patient view: show doctor name
-                return message.SenderAccType == 1 ? message.Sender : message.Receiver;
+                if (SessionManager.CurrentUsername == message.Receiver)
+                    return message.Sender;
+                else
+                {
+                    // For patient view: show doctor name
+                    return message.Receiver;
+                }
             }
             return string.Empty;
         }

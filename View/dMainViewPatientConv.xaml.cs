@@ -78,7 +78,7 @@ namespace PolMedUMG.View
         }
 
         //Obsługa przycisku wysłanie wiadomości do pacjenta
-        private void Send_Click1(object sender, RoutedEventArgs e)
+        private void Send_Click(object sender, RoutedEventArgs e)
         {
             string messageText = MessageInput.Text;
             string senderr = SessionManager.CurrentUsername;
@@ -88,7 +88,7 @@ namespace PolMedUMG.View
 
             if (!string.IsNullOrWhiteSpace(messageText))
             {
-                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText, "Odczytane", "dummy", "nowa wiadomość", 1, 0);
+                var newMsg = new ConvMessages(senderr, receiver, DateTime.Now, messageText, "nowa wiadomość", "dummy");
 
                 Messages.Add(newMsg);
 
@@ -102,8 +102,8 @@ namespace PolMedUMG.View
                     {
                         conn.Open();
 
-                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage, statusPatient, sender_acctype,receiver_acctype) 
-                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage, @statusPatient,@sendertype, @receivertype);";
+                        string sql = @"INSERT INTO Conversations (sender, receiver, date, content, status, doctorImage) 
+                        VALUES (@sender, @receiver, @date, @content, @status, @doctorImage);";
 
 
                         using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -111,13 +111,9 @@ namespace PolMedUMG.View
                             cmd.Parameters.AddWithValue("@sender", senderr);
                             cmd.Parameters.AddWithValue("@receiver", receiver);
                             cmd.Parameters.AddWithValue("@date", dataAsString);
-                            cmd.Parameters.AddWithValue("@content", messageText+"4343");
-                            cmd.Parameters.AddWithValue("@status", "Odczytane");
+                            cmd.Parameters.AddWithValue("@content", messageText);
+                            cmd.Parameters.AddWithValue("@status", "nowa wiadomość");
                             cmd.Parameters.AddWithValue("@doctorImage", "dummy");
-                            cmd.Parameters.AddWithValue("@statusPatient", "nowa wiadomość");
-                            cmd.Parameters.AddWithValue("@sendertype", 1);
-                            cmd.Parameters.AddWithValue("@receivertype", 0);
-
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -134,7 +130,7 @@ namespace PolMedUMG.View
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                Send_Click1(sender, e);
+                Send_Click(sender, e);
             }
         }
 

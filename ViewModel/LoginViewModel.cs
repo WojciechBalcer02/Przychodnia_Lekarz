@@ -120,11 +120,6 @@ namespace PolMedUMG.ViewModel
                             }
                         }
                         TimeSpan timeSinceGeneration = DateTime.Now - dateOfGeneration;
-                        if (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15)
-                        {
-                            Debug.WriteLine("działa fantastycznie");
-                        }
-
                         if ((hashCheckPassed == true) || (_password == recoveryPassword && timeSinceGeneration.TotalMinutes <= 15))
                         {
 
@@ -188,15 +183,17 @@ namespace PolMedUMG.ViewModel
                             }
                             if (_password == recoveryPassword && timeSinceGeneration.TotalMinutes > 15) // przedawnione haslo
                             {
-                                ErrorMessage = "Hasło przywracające uległo przedawnieniu";
+                                ErrorMessage = "Hasło przywracające uległo przedawnieniu.";
                                 MySqlCommand deleteRecoveryPasswords = new MySqlCommand();
                                 deleteRecoveryPasswords.Connection = conn;
                                 deleteRecoveryPasswords.CommandText = @"DELETE FROM PassRecovery WHERE username = @uid;";
                                 deleteRecoveryPasswords.Parameters.AddWithValue("@uid", _username);
                                 deleteRecoveryPasswords.ExecuteNonQuery();
                             }
+                            
 
                         }
+                        conn.Close();
                     }
                     catch (MySql.Data.MySqlClient.MySqlException ex)
                     {
@@ -205,7 +202,7 @@ namespace PolMedUMG.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Niepoprawny login lub hasło");
+                    MessageBox.Show("Nie istnieje konto o tej nazwie użytkownika.");
                 }
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)

@@ -21,7 +21,7 @@
                     <fa:ImageAwesome Icon="Lock" Margin="12"/>
                 </Border>
                 <Border Background="White" CornerRadius="10" Height="30" Margin="-14">
-                    <PasswordBox x:Name="passwordInput" Width="300" Height="30" Background="Transparent" BorderThickness="0" Padding="15,0,0,0" FontSize="23">
+                    <PasswordBox x:Name="passwordInput" Keyboard.KeyDown="PasswordBox_KeyDown"  Width="300" Height="30" Background="Transparent" BorderThickness="0" Padding="15,0,0,0" FontSize="23">
 
                     </PasswordBox>
                 </Border>

@@ -1,1 +1,7 @@
-Aplikacja pacjenci i lekarze, bez konfliktów, zmianiłem częsciowo kod pacjenta tak aby działał z naszą bazą. Trzeba zmienić źródło numeru telefonu dla wizyt aby brały je z bazy i usunąć dodawanie nr telefonu przy tworzeniu wizyt od strony pacjenta, stworzyć tworzenie kont lekarzy na stronie adminów. Jak narazie wszystko co jest działa jak powinno, ale ręki sę uciąć nie dam. Obecnie na 04.06.2025 23:53 2 commity w plecy od strony pacjenta.
+Aplikacja połączene pacjęci + lekarze, bez konfliktów, kod pacjenta zadaptowany tak aby działał z naszą bazą.
+Trzeba zmienić źródło numeru telefonu dla wizyt aby brały je z bazy i stworzyć tworzenie kont lekarzy na stronie adminów.
+Jak narazie wszystko co jest działa jak powinno, obecnie jest up-to-date z wersją aplikacji pacjenta.
+
+Uniwersalne konto pacjenta: patient patient
+Uniwersalne konto lekarza: doctor doctor
+Konto admina: admin admin

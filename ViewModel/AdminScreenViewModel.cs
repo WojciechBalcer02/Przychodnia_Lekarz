@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 using PolMedUMG.View;
 using System;
 using System.Collections.Generic;
@@ -47,7 +47,10 @@ namespace PolMedUMG.ViewModel
         {
             PasswordAddFunc = new RelayCommand(AddPassword);
             RemoveUserFunc = new RelayCommand(RemoveUser);
+            AddDoctorFunc = new RelayCommand(AddDoctor);
+            RemoveDoctorFunc = new RelayCommand(RemoveDoctor);
         }
+
 
 
         public void AddPassword()
@@ -148,6 +151,152 @@ namespace PolMedUMG.ViewModel
 
             }
         }
+
+
+        //Lekarz
+
+
+        private string _doctorPassword;
+        private string _doctorSpecialty;
+        private string _doctorToRemove;
+        private string _doctorFirstName;
+        private string _doctorLastName;
+        private string _doctorEmail;
+        private string _doctorPhone;
+        private string _doctorOffice;
+        private string _doctorUsername;
+
+        public string DoctorFirstName
+        {
+            get => _doctorFirstName;
+            set { _doctorFirstName = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorLastName
+        {
+            get => _doctorLastName;
+            set { _doctorLastName = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorEmail
+        {
+            get => _doctorEmail;
+            set { _doctorEmail = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorPhone
+        {
+            get => _doctorPhone;
+            set { _doctorPhone = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorOffice
+        {
+            get => _doctorOffice;
+            set { _doctorOffice = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorPassword
+        {
+            get => _doctorPassword;
+            set { _doctorPassword = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorSpecialty
+        {
+            get => _doctorSpecialty;
+            set { _doctorSpecialty = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorToRemove
+        {
+            get => _doctorToRemove;
+            set { _doctorToRemove = value; OnPropertyChanged(); }
+        }
+
+        public string DoctorUsername
+        {
+            get => _doctorUsername;
+            set { _doctorUsername = value; OnPropertyChanged();  }
+        }
+
+        public ICommand AddDoctorFunc { get; }
+        public ICommand RemoveDoctorFunc { get; }
+
+                public void AddDoctor()
+        {
+            using (MySqlConnection conn = new MySqlConnection(SessionManager.connStrSQL))
+            {
+                conn.Open();
+                MySqlCommand query = new MySqlCommand("SELECT COUNT(*) FROM doctors WHERE email = @Email;", conn);
+                query.Parameters.AddWithValue("@Email", _doctorEmail);
+                int doctorCount = Convert.ToInt32(query.ExecuteScalar());
+
+                if (doctorCount > 0)
+                {
+                    MessageBox.Show("Lekarz o podanym adresie e-mail już istnieje");
+                    return;
+                }
+
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand(@"
+                        INSERT INTO doctors 
+                            (first_name, last_name, email, phone, office_number, password, specialty, username) 
+                        VALUES 
+                            (@FirstName, @LastName, @Email, @Phone, @Office, @Password, @Specialty, @Username);", conn);
+
+                    cmd.Parameters.AddWithValue("@FirstName", _doctorFirstName);
+                    cmd.Parameters.AddWithValue("@LastName", _doctorLastName);
+                    cmd.Parameters.AddWithValue("@Email", _doctorEmail);
+                    cmd.Parameters.AddWithValue("@Phone", _doctorPhone);
+                    cmd.Parameters.AddWithValue("@Office", _doctorOffice);
+                    cmd.Parameters.AddWithValue("@Password", _doctorPassword);
+                    cmd.Parameters.AddWithValue("@Specialty", _doctorSpecialty);
+                    cmd.Parameters.AddWithValue("@Username", _doctorUsername);
+
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Dodano nowego lekarza");
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show("Błąd podczas dodawania lekarza: " + ex.Message);
+                }
+            }
+        }
+
+
+        public void RemoveDoctor()
+        {
+            using (MySqlConnection conn = new MySqlConnection(SessionManager.connStrSQL))
+            {
+                conn.Open();
+                MySqlCommand query = new MySqlCommand("SELECT COUNT(*) FROM doctors WHERE username = @Username;", conn);
+                query.Parameters.AddWithValue("@Username", _doctorToRemove);
+                int doctorCount = Convert.ToInt32(query.ExecuteScalar());
+
+                if (doctorCount == 0)
+                {
+                    MessageBox.Show("Lekarz o podanym loginie nie istnieje");
+                    return;
+                }
+
+                try
+                {
+                    MySqlCommand deleteCmd = new MySqlCommand("DELETE FROM doctors WHERE username = @Username LIMIT 1;", conn);
+                    deleteCmd.Parameters.AddWithValue("@Username", _doctorToRemove);
+                    deleteCmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Usunięto lekarza: " + _doctorToRemove);
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show("Błąd podczas usuwania lekarza: " + ex.Message);
+                }
+            }
+        }
+
             
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")

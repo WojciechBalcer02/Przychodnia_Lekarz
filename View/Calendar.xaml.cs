@@ -55,11 +55,11 @@ namespace PolMedUMG.View
                             {
                                 PlannedVisits.Add(new Model.Visit
                                 {
-                                    causeOfVisit = reader["causeOfVisit"].ToString() ?? "",
-                                    additionalInfo = Convert.ToString(reader["additionalInfo"]) ?? "",
+                                    CauseOfVisit = reader["causeOfVisit"].ToString() ?? "",
+                                    AdditionalInfo = Convert.ToString(reader["additionalInfo"]) ?? "",
                                     PhoneNumber = Convert.ToString(reader["phoneNumber"]) ?? "",
                                     DateOfVisit = Convert.ToDateTime(reader["dateOfVisit"]),
-                                    serviceName = Convert.ToString(reader["serviceName"]) ?? ""
+                                    ServiceName = Convert.ToString(reader["serviceName"]) ?? ""
                                 });
                             }
                         }

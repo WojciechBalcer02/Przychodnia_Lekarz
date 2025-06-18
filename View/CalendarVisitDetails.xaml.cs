@@ -12,10 +12,10 @@ namespace PolMedUMG.View
             InitializeComponent();
 
             DateOfVisitText.Text = $"Data wizyty:\n{visit.DateOfVisit}";
-            CauseOfVisitText.Text = $"Powód wizyty: {visit.causeOfVisit}";
-            AdditionalInfoText.Text = $"Dodatkowe informacje:\n{visit.additionalInfo?.Replace("\\n", Environment.NewLine)}";
+            CauseOfVisitText.Text = $"Powód wizyty: {visit.CauseOfVisit}";
+            AdditionalInfoText.Text = $"Dodatkowe informacje:\n{visit.AdditionalInfo?.Replace("\\n", Environment.NewLine)}";
             PhoneNumberText.Text = $"Numer telefonu: {visit.PhoneNumber}";
-            ServiceNameText.Text = $"Nazwa usługi: {visit.serviceName}";
+            ServiceNameText.Text = $"Nazwa usługi: {visit.ServiceName}";
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

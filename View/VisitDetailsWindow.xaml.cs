@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PolMedUMG.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +17,14 @@ namespace PolMedUMG.View
 {
     public partial class VisitDetailsWindow : Window
     {
-        public VisitDetailsWindow(string description)
+        public VisitDetailsWindow(Visit vis)
         {
             InitializeComponent();
-            DescriptionText.Text = description;
+            DoctorName.Text = $"Lekarz: \n{vis.Doctor}";
+            DateOfVisitText.Text = $"Data wizyty:\n{vis.Date}";
+            RoomNumber.Text = $"Gabinet lekarza:\n{vis.RoomNumber}";
+            CauseOfVisitText.Text = $"Powód wizyty: \n{vis.causeOfVisit}";
+            DescriptionText.Text = $"Opis wizyty: \n{vis.Description}";
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

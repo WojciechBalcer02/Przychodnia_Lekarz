@@ -199,9 +199,6 @@ namespace PolMedUMG.View
                     case "NotesTextBox":
                         tb.Text = "Wpisz dodatkowe uwagi";
                         break;
-                    case "PhoneTextBox":
-                        tb.Text = "Wpisz swój numer telefonu";
-                        break;
                 }
                 tb.Foreground = new SolidColorBrush(Colors.Gray);
             }
@@ -212,9 +209,7 @@ namespace PolMedUMG.View
             if (DoctorComboBox.SelectedValue == null ||
                 ServiceComboBox.SelectedItem == null ||
                 string.IsNullOrWhiteSpace(PurposeTextBox.Text) ||
-                string.IsNullOrWhiteSpace(PhoneTextBox.Text) ||
                 PurposeTextBox.Text == "Wpisz powód wizyty" ||
-                PhoneTextBox.Text == "Wpisz swój numer telefonu" ||
                 selectedDate == null)
             {
                 MessageBox.Show("Proszę uzupełnić wszystkie wymagane pola.", "Błąd walidacji", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -226,20 +221,18 @@ namespace PolMedUMG.View
                 using (var conn = new MySqlConnection(SessionManager.connStrSQL))
                 {
                     conn.Open();
-                    string sql = @"INSERT INTO Visits (specialistID, causeOfVisit, additionalInfo, phoneNumber, dateOfVisit, serviceName, status, patient_id, details)
-                                   VALUES (@doctor, @cause, @info, @phone, @date, @service, @status, @patient, @details)";
+                    string sql = @"INSERT INTO Visits (specialistID, causeOfVisit, additionalInfo, dateOfVisit, serviceName, status, patient_id)
+                                   VALUES (@doctor, @cause, @info, @date, @service, @status, @patient)";
 
                     using (var cmd = new MySqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@doctor", DoctorComboBox.SelectedValue.ToString());
                         cmd.Parameters.AddWithValue("@cause", PurposeTextBox.Text);
                         cmd.Parameters.AddWithValue("@info", NotesTextBox.Text);
-                        cmd.Parameters.AddWithValue("@phone", PhoneTextBox.Text);
                         cmd.Parameters.AddWithValue("@date", selectedDate.Value.Date + currentTime);
                         cmd.Parameters.AddWithValue("@service", ServiceComboBox.SelectedItem.ToString());
                         cmd.Parameters.AddWithValue("@status", "nieodczytane");
                         cmd.Parameters.AddWithValue("@patient", SessionManager.CurrentUsername);
-                        cmd.Parameters.AddWithValue("@details", "");
 
                         cmd.ExecuteNonQuery();
                     }

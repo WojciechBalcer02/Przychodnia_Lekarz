@@ -39,7 +39,7 @@ namespace PolMedUMG.View
             this.Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SendMessage(object sender, RoutedEventArgs e)//Otwiera okienko wiadomości z pacjentem
         {
             if (currentPatient == null) return;
             dMainViewPatientConv LookupPatientConvWindow = new dMainViewPatientConv(currentPatient);
@@ -50,6 +50,52 @@ namespace PolMedUMG.View
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
+        }
+
+        private void MakeVisit(object sender, RoutedEventArgs e) //Otwiera ekran tworzenia wizyty
+        {
+            try
+            {
+                DoctorScreen mainWindow = null;
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is DoctorScreen doctorScreen)
+                    {
+                        mainWindow = doctorScreen;
+                        break;
+                    }
+                }
+                if (mainWindow != null)
+                {
+                    mainWindow.LoadContent(new dMakeAppointment());
+                    UpdateNavSelection(mainWindow);
+                    mainWindow.Activate();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd: {ex.Message}", "Błąd");
+            }
+        }
+
+        private void UpdateNavSelection(DoctorScreen window)
+        {
+            var field = typeof(DoctorScreen).GetField("NavList",
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+
+            if (field?.GetValue(window) is ListBox navList)
+            {
+                foreach (ListBoxItem item in navList.Items)
+                {
+                    if (item.Content?.ToString() == "Umów wizytę")
+                    {
+                        navList.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
         }
     }
 }

@@ -45,21 +45,23 @@ namespace PolMedUMG.View
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT `causeOfVisit`, `additionalInfo`, `phoneNumber`, `dateOfVisit`, `serviceName` FROM `Visits` WHERE `patient_id` = @patientId";
+                    string sql = "SELECT causeOfVisit, additionalInfo, dateOfVisit, serviceName,phoneNumber,roomNumber,specialistID FROM Visits INNER JOIN doctors ON Visits.specialistID = doctors.uid WHERE patient_id = @Id";
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@patientId", SessionManager.CurrentUsername);
+                        cmd.Parameters.AddWithValue("Id", SessionManager.CurrentUsername);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 PlannedVisits.Add(new Model.Visit
                                 {
-                                    causeOfVisit = reader["causeOfVisit"].ToString() ?? "",
-                                    additionalInfo = Convert.ToString(reader["additionalInfo"]) ?? "",
+                                    DoctorName = Convert.ToString(reader["specialistID"]) ?? "",
+                                    RoomNumber = Convert.ToString(reader["roomNumber"]) ?? "",
+                                    CauseOfVisit = reader["causeOfVisit"].ToString() ?? "",
+                                    AdditionalInfo = Convert.ToString(reader["additionalInfo"]) ?? "",
                                     PhoneNumber = Convert.ToString(reader["phoneNumber"]) ?? "",
                                     DateOfVisit = Convert.ToDateTime(reader["dateOfVisit"]),
-                                    serviceName = Convert.ToString(reader["serviceName"]) ?? ""
+                                    ServiceName = Convert.ToString(reader["serviceName"]) ?? ""
                                 });
                             }
                         }

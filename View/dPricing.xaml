@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:PolMedUMG.View"
              Height="Auto" Width="Auto">
 
-    <Grid Margin="10" VerticalAlignment="Center">
+    <Grid Margin="10" VerticalAlignment="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

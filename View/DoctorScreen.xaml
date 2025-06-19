@@ -55,7 +55,7 @@
                             CornerRadius="6"
                             BorderBrush="LightGray"
                             Background="Transparent"
-                            Padding="20,16">
+                            Padding="20,20">
                                         <ContentPresenter HorizontalAlignment="Center"
                                   VerticalAlignment="Center"/>
                                     </Border>
@@ -81,7 +81,6 @@
                 <ListBoxItem Content="Kalendarz"/>
                 <ListBoxItem Content="Cennik usług"/>
                 <ListBoxItem Content="Wiadomości"/>
-                <ListBoxItem Content="Ustawienia konta"/>
             </ListBox>
 
         </DockPanel>

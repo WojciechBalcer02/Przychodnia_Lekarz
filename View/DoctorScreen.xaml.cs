@@ -53,9 +53,9 @@ namespace PolMedUMG.View
                     case "Wiadomości":
                         LoadContent(new DoctorMessages());
                         break;
-                    case "Ustawienia konta":
+                   /* case "Ustawienia konta":
                         LoadContent(new dSettings());
-                        break;
+                        break;*/
                     default:
                         break;
                 }

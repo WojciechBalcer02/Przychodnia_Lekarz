@@ -47,7 +47,7 @@
                          Text="Wpisz dodatkowe uwagi" Foreground="Gray"
                          GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
             </Border>
-            <Border CornerRadius="10" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,25" Background="#F8F8F8"/>
+            
 
             <Button Content="Wyślij zgłoszenie" Height="50" 
                     Background="#4A6CF7" Foreground="White" FontWeight="Bold"

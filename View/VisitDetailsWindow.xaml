@@ -13,12 +13,12 @@
         <!-- Background -->
 
         <Border Width="550"
-                Height="600"
+                Height="650"
                 Background="White"
                 CornerRadius="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Padding="30">
+                Padding="20,30,30,10">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="5"/>
             </Border.Effect>

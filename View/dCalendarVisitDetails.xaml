@@ -16,12 +16,12 @@
         <!-- Background -->
 
         <Border Width="500"
-                Height="650"
+                Height="700"
                 Background="White"
                 CornerRadius="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Padding="30">
+                Padding="30,20,30,10">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="5"/>
             </Border.Effect>
@@ -49,7 +49,7 @@
                 <!-- Under logo -->
                 <Separator HorizontalAlignment="Stretch"
                            VerticalAlignment="Top"
-                           Margin="0,60,0,0"
+                           Margin="0,65,0,0"
                            Height="1"
                            Background="Gray"/>
 

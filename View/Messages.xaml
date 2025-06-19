@@ -74,7 +74,7 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- zdjecie doktora -->
-                            <Image Grid.Column="0" Source="{Binding DoctorImage}" Width="10" Height="10" />
+                            <Image Grid.Column="0" Source="/Images/Icons/profile.jpg" Width="35" Height="35" />
 
                             <!-- imie nazwisko doktora -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">

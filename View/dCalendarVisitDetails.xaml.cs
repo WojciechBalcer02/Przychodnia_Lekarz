@@ -6,13 +6,13 @@ namespace PolMedUMG.View
     /// <summary>
     /// Logika interakcji dla klasy CalendarVisitDetails.xaml
     /// </summary>
-    public partial class CalendarVisitDetails : Window
+    public partial class dCalendarVisitDetails : Window
     {
-        public CalendarVisitDetails(Model.Visit visit)
+        public dCalendarVisitDetails(Model.Visit visit)
         {
             InitializeComponent();
-            DoctorName.Text = $"Lekarz: {visit.DoctorName}";
-            RoomNumber.Text = $"Numer gabinetu: {visit.RoomNumber}";
+            PatientName.Text = $"Pacjent: {visit.PatientName}";
+            PESEL.Text = $"PESEL pacjenta: {visit.PESEL}";
             DateOfVisitText.Text = $"Data wizyty:\n{visit.DateOfVisit}";
             CauseOfVisitText.Text = $"Powód wizyty: {visit.CauseOfVisit}";
             AdditionalInfoText.Text = $"Dodatkowe informacje:\n{visit.AdditionalInfo?.Replace("\\n", Environment.NewLine)}";
@@ -24,6 +24,7 @@ namespace PolMedUMG.View
         {
             Close();
         }
+
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)

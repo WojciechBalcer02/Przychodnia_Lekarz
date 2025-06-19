@@ -1,4 +1,4 @@
-﻿<Window x:Class="PolMedUMG.View.CalendarVisitDetails"
+﻿<Window x:Class="PolMedUMG.View.dCalendarVisitDetails"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Szczegóły wizyty"
@@ -9,7 +9,9 @@
         Width="600"
         Height="750"
         WindowStartupLocation="CenterScreen"
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        >
+    
 
         <!-- Background -->
 
@@ -54,8 +56,8 @@
                 <!-- Info -->
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock x:Name="DateOfVisitText" FontSize="20" FontWeight="Bold" Margin="0,10"/>
-                    <TextBlock x:Name="DoctorName" FontSize="18" Margin="0,10"/>
-                    <TextBlock x:Name="RoomNumber" FontSize="18" Margin="0,10"/>
+                    <TextBlock x:Name="PatientName" FontSize="18"  Margin="0,10"/>
+                    <TextBlock x:Name="PESEL" FontSize="18"  Margin="0,10"/>
                     <TextBlock x:Name="CauseOfVisitText" FontSize="18" Margin="0,10"/>
                     <TextBlock x:Name="PhoneNumberText" FontSize="18" Margin="0,10"/>
                     <TextBlock x:Name="ServiceNameText" FontSize="18" Margin="0,10"/>

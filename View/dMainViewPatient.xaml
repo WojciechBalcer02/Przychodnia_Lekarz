@@ -126,21 +126,15 @@
                 <TextBlock  FontSize="16" x:Name="PatientAddressText" HorizontalAlignment="Left" Margin="15,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 <TextBlock  FontSize="16" x:Name="PatientPeselText" HorizontalAlignment="Left" Margin="15,280,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 
-                <Button x:Name="btnPatientViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="Button_Click" Width="170" Height="45">
+                <Button x:Name="btnPatientViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="SendMessage" Width="170" Height="45">
                     <TextBlock  FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyślij wiadomość" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
                 </Button>
 
-                <Button  x:Name="btnPatientViewVisits" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top"  Width="150" Height="45">
+                <Button  x:Name="btnPatientViewVisits" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top"  Width="150" Height="45" Click="MakeVisit">
                     <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Umów wizyty" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
                 </Button>
 
-                <Button x:Name="btnPatientViewResults" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,70,0,0" VerticalAlignment="Top"   Width="180" Height="45">
-                    <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyświetl wyniki badań" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
-                </Button>
-
-                <Button x:Name="btnPatientViewReceipt" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="400,70,0,0" VerticalAlignment="Top"   Width="140" Height="45">
-                    <TextBlock FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wystaw receptę" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
-                </Button>
+              
 
 
 

@@ -127,11 +127,11 @@
                 <TextBlock FontSize="16" x:Name="DoctorPhoneNumberText" HorizontalAlignment="Left" Margin="15,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
                 <TextBlock FontSize="16" x:Name="DoctorSpecializationText" HorizontalAlignment="Left" Margin="15,280,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
 
-                <Button x:Name="btnDoctorViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="Button_Click" Width="170" Height="60">
+                <Button x:Name="btnDoctorViewMessage" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"  Click="SendMessage" Width="170" Height="60">
                     <TextBlock  FontFamily="Arial" Background="Transparent" FontSize="16" Text="Wyślij wiadomość" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
                 </Button>
 
-                <Button x:Name="btnDoctorViewCreateVisit" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="390,10,0,0" VerticalAlignment="Top"  Width="170" Height="60">
+                <Button x:Name="btnDoctorViewCreateVisit" Style="{DynamicResource RoundedButton}" HorizontalAlignment="Left" Margin="390,10,0,0" Click="MakeVisit" VerticalAlignment="Top"  Width="170" Height="60">
                     <TextBlock  FontFamily="Arial" Background="Transparent" FontSize="16" Text="Umów wizytę" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
                 </Button>
 

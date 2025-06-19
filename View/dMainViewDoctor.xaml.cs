@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PolMedUMG.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,18 +23,18 @@ namespace PolMedUMG.View
 
         private dDoctor currentDoctor;
 
-        public dMainViewDoctor(dDoctor doktor) 
+        public dMainViewDoctor(dDoctor doktor)
         {
             InitializeComponent();
             currentDoctor = doktor;
-            DoctorNameText.Text = "Imie: "+doktor.FirstName;
-            DoctorSurnameText.Text = "Nazwisko: "+doktor.LastName;
-            DoctorEmailText.Text = "Email: "+doktor.Email;
-            DoctorRoomNumberText.Text = "Numer gabientu: "+doktor.roomNumber;
-            DoctorPhoneNumberText.Text = "Numer telefonu: "+doktor.phoneNumber;
-            DoctorSpecializationText.Text = "Specjalizacja: "+doktor.specialization;
+            DoctorNameText.Text = "Imie: " + doktor.FirstName;
+            DoctorSurnameText.Text = "Nazwisko: " + doktor.LastName;
+            DoctorEmailText.Text = "Email: " + doktor.Email;
+            DoctorRoomNumberText.Text = "Numer gabientu: " + doktor.roomNumber;
+            DoctorPhoneNumberText.Text = "Numer telefonu: " + doktor.phoneNumber;
+            DoctorSpecializationText.Text = "Specjalizacja: " + doktor.specialization;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SendMessage(object sender, RoutedEventArgs e)//Otwiera okienko wiadomości z lekarzem
         {
             if (currentDoctor == null) return;
             else if ((currentDoctor != null) && (currentDoctor.uid != SessionManager.CurrentUsername))
@@ -41,9 +42,37 @@ namespace PolMedUMG.View
                 dMainViewDoctorConv LookupDoctorConvWindow = new dMainViewDoctorConv(currentDoctor);
                 LookupDoctorConvWindow.Show();
             }
-            else 
+            else
             {
-                MessageBox.Show("Nie można rozpocząć rozmowy z samym sobą","Błąd");
+                MessageBox.Show("Nie można rozpocząć rozmowy z samym sobą", "Błąd");
+            }
+        }
+
+
+        private void MakeVisit(object sender, RoutedEventArgs e) //Otwiera ekran tworzenia wizyty
+        {
+            try
+            {
+                DoctorScreen mainWindow = null;
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is DoctorScreen doctorScreen)
+                    {
+                        mainWindow = doctorScreen;
+                        break;
+                    }
+                }
+                if (mainWindow != null)
+                {
+                    mainWindow.LoadContent(new dMakeAppointment());
+                    UpdateNavSelection(mainWindow);
+                    mainWindow.Activate();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd: {ex.Message}", "Błąd");
             }
         }
 
@@ -51,5 +80,25 @@ namespace PolMedUMG.View
         {
             this.Close();
         }
+
+        private void UpdateNavSelection(DoctorScreen window)
+        {
+            var field = typeof(DoctorScreen).GetField("NavList",
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance);
+
+            if (field?.GetValue(window) is ListBox navList)
+            {
+                foreach (ListBoxItem item in navList.Items)
+                {
+                    if (item.Content?.ToString() == "Umów wizytę")
+                    {
+                        navList.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 }

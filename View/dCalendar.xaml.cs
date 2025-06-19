@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,16 +54,18 @@ namespace PolMedUMG.View
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT `causeOfVisit`, `additionalInfo`, `phoneNumber`, `dateOfVisit`, `serviceName` FROM `Visits` WHERE `patient_id` = @patientId";
+                    string sql = "SELECT causeOfVisit, additionalInfo, dateOfVisit,serviceName,phoneNumber,PESEL,patient_id FROM Visits INNER JOIN patients ON Visits.patient_id = patients.uid WHERE specialistID = @Id";
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@patientId", SessionManager.CurrentUsername);
+                        cmd.Parameters.AddWithValue("Id", SessionManager.CurrentUsername);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 PlannedVisits.Add(new ModelVisit
                                 {
+                                    PESEL = Convert.ToString(reader["PESEL"]) ?? "",
+                                    PatientName = Convert.ToString(reader["patient_id"]) ?? "",
                                     CauseOfVisit = reader["causeOfVisit"].ToString() ?? "",
                                     AdditionalInfo = Convert.ToString(reader["additionalInfo"]) ?? "",
                                     PhoneNumber = Convert.ToString(reader["phoneNumber"]) ?? "",
@@ -73,6 +75,9 @@ namespace PolMedUMG.View
                             }
                         }
                     }
+                    conn.Close();
+
+
                 }
                 catch (Exception ex)
                 {
@@ -239,11 +244,13 @@ namespace PolMedUMG.View
             {
                 if (d.DateOfVisit.Date == cal.SelectedDate)
                 {
-                    var detailsWindow = new CalendarVisitDetails(d);
+                    var detailsWindow = new dCalendarVisitDetails(d);
                     detailsWindow.ShowDialog();
                 }
             }
             cal.SelectedDates.Clear();
         }
+
+
     }
 }

@@ -13,6 +13,9 @@ namespace PolMedUMG.View
         public string Doctor { get; set; }       // specialistID jako tekst
         public string Description { get; set; }  // details
         public string TestType { get; set; }     // serviceName
+        public string causeOfVisit { get; set; } // powód wizyty
+
+        public string RoomNumber { get; set; } //gabinet lekarza
 
         public string FormattedDate => Date.ToString("dd.MM.yyyy");
     }
@@ -36,8 +39,8 @@ namespace PolMedUMG.View
                     conn.Open();
 
                     string sql = @"
-                        SELECT dateOfVisit, serviceName, details, specialistID 
-                        FROM Visits 
+                        SELECT dateOfVisit, serviceName, additionalInfo, specialistID,causeOfVisit,roomNumber
+                        FROM Visits INNER JOIN doctors ON Visits.specialistID = doctors.uid
                         WHERE patient_id = @uid;";
 
                     using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -52,8 +55,10 @@ namespace PolMedUMG.View
                                 {
                                     Date = Convert.ToDateTime(reader["dateOfVisit"]),
                                     Doctor = reader["specialistID"].ToString(),
+                                    RoomNumber = reader["roomNumber"].ToString(),
                                     TestType = reader["serviceName"].ToString(),
-                                    Description = reader["details"].ToString()
+                                    causeOfVisit = reader["causeOfVisit"].ToString(),
+                                    Description = reader["additionalInfo"].ToString().Replace("\\n", Environment.NewLine)
                                 });
                             }
                         }
@@ -107,7 +112,7 @@ namespace PolMedUMG.View
             if (VisitsListBox.SelectedItem is Visit selectedVisit)
             {
                 var detailsWindow = new VisitDetailsWindow(
-                    selectedVisit.Description
+                    selectedVisit
                 );
                 detailsWindow.ShowDialog();
 

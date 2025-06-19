@@ -22,6 +22,14 @@
                           IsEditable="True" IsReadOnly="True" BorderThickness="0"/>
             </Border>
 
+            <TextBlock Text="Pacjent:" FontFamily="Chakra Petch" FontWeight="Bold" FontSize="24" Margin="0,10,0,5"/>
+            <Border CornerRadius="10" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,15" Background="#F8F8F8">
+                <ComboBox x:Name="PatientComboBox" Height="25" Width="350"
+                         Padding="10,5" Background="Transparent"
+                         FontSize="16" FontFamily="Chakra Petch"
+                         IsEditable="True" IsReadOnly="True" BorderThickness="0"/>
+            </Border>
+
             <TextBlock Text="Usługa medyczna:" FontFamily="Chakra Petch" FontWeight="Bold" FontSize="24" Margin="0,10,0,5"/>
             <Border CornerRadius="10" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,15" Background="#F8F8F8">
                 <ComboBox x:Name="ServiceComboBox" Height="35" Width="350"
@@ -48,15 +56,8 @@
                          GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
             </Border>
 
-            <TextBlock Text="Kontakt telefoniczny:" FontFamily="Chakra Petch" FontWeight="Bold" FontSize="24" Margin="0,10,0,5"/>
-            <Border CornerRadius="10" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,25" Background="#F8F8F8">
-                <TextBox x:Name="PhoneTextBox" Height="35" Width="350"
-                         Padding="10,5" Background="Transparent"
-                         FontSize="16" FontFamily="Chakra Petch" BorderThickness="0"
-                         Text="Wpisz swój numer telefonu" Foreground="Gray"
-                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-            </Border>
-
+          
+          
             <Button Content="Wyślij zgłoszenie" Height="50" 
                     Background="#4A6CF7" Foreground="White" FontWeight="Bold"
                     BorderThickness="0" FontSize="16" Cursor="Hand"
